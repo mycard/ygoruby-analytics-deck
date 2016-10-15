@@ -1,0 +1,159 @@
+[
+  {
+    "type": "tag",
+    "name": "有",
+    "restrain": {
+      "name": "阿里阿德涅",
+      "to": ">= 1",
+      "type": "card",
+      "cardname": "解放之阿里阿德涅",
+      "id": 98301564
+    }
+  },
+  {
+    "type": "tag",
+    "name": "强贪",
+    "priority": 1,
+    "configs": [
+      "global"
+    ],
+    "restrain": {
+      "name": "强欲而贪欲之壶",
+      "to": ">= 1",
+      "type": "card",
+      "cardname": "强欲而贪欲之壶",
+      "id": 35261759
+    }
+  },
+  {
+    "type": "deck",
+    "name": "炼装",
+    "priority": 3,
+    "restrain": [
+      {
+        "name": "[炼装]",
+        "range": "main",
+        "to": "> 10",
+        "type": "set",
+        "setname": "炼装"
+      },
+      {
+        "name": "威风妖怪·麒麟",
+        "to": ">= 1",
+        "type": "card",
+        "cardname": "威风妖怪·麒麟",
+        "id": 31178212
+      }
+    ],
+    "tags": [
+      {
+        "type": "tag",
+        "name": "马",
+        "restrain": {
+          "name": "威风妖怪·麒麟",
+          "range": "main",
+          "to": ">= 1",
+          "type": "card",
+          "cardname": "威风妖怪·麒麟",
+          "id": 31178212
+        }
+      },
+      {
+        "type": "tag",
+        "name": "豪",
+        "restrain": {
+          "name": "胧影之业风",
+          "range": "main",
+          "to": ">= 1",
+          "type": "card",
+          "cardname": "黑羽-胧影之业风",
+          "id": 9929398
+        }
+      },
+      {
+        "type": "tag",
+        "name": "有"
+      }
+    ]
+  },
+  {
+    "type": "tag",
+    "name": "削命",
+    "configs": [
+      "global"
+    ],
+    "restrain": {
+      "name": "削命的宝札",
+      "range": "main",
+      "to": ">= 1",
+      "type": "card",
+      "cardname": "削命的宝札",
+      "id": 59750328
+    }
+  },
+  {
+    "type": "deck",
+    "name": "星际仙踪",
+    "restrain": {
+      "name": "[星际仙踪]",
+      "to": "> 10",
+      "type": "set",
+      "setname": "星际仙踪"
+    },
+    "tags": [
+      {
+        "type": "tag",
+        "name": "死星",
+        "restrain": {
+          "name": "达克星",
+          "to": ">= 1",
+          "type": "card",
+          "cardname": "星际仙踪-达克星",
+          "id": 85991529
+        }
+      },
+      {
+        "type": "tag",
+        "name": "削命"
+      }
+    ]
+  },
+  {
+    "type": "tag",
+    "name": "外挂大怪兽",
+    "configs": [
+      "global"
+    ],
+    "restrain": {
+      "name": "[大怪兽]",
+      "range": "main",
+      "to": ">= 1",
+      "type": "set",
+      "setname": "大怪兽"
+    }
+  },
+  {
+    "type": "deck",
+    "name": "堕天使",
+    "restrain": {
+      "name": "[堕天使]",
+      "to": ">= 10",
+      "type": "set",
+      "setname": "堕天使"
+    },
+    "tags": [
+      {
+        "type": "tag",
+        "name": "虚无控",
+        "restrain": {
+          "name": "虚无魔人",
+          "range": "main",
+          "to": ">= 1",
+          "type": "card",
+          "cardname": "虚无魔人",
+          "id": 47084486
+        }
+      }
+    ]
+  }
+]

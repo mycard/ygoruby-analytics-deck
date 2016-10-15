@@ -1,0 +1,15 @@
+type: deck
+name: 白光火
+restrain:
+  -
+    type: set
+    setname: 光道
+    to: ">= 10"
+  -
+    type: card
+    cardname: 妖精传姬-白雪
+    to: ">= 1"
+  -
+    type: set
+    setname: 不知火
+    to: ">= 3"

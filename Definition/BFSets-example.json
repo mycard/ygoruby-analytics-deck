@@ -1,0 +1,17 @@
+[
+  {
+    "type": "deck",
+    "priority": 1,
+    "name": "黑羽",
+    "restrain": [
+      {
+        "type": "set",
+        "setname": "黑羽",
+        "range": "main",
+        "to": ">=10"
+      }
+    ],
+    "tags": [
+    ]
+  }
+]
