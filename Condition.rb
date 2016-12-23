@@ -3,7 +3,7 @@ class Condition
 	attr_accessor :number
 
 	def initialize(operator, number)
-		@operator = operator.strip!
+		@operator = operator.strip
 		@number   = number
 	end
 
@@ -31,7 +31,7 @@ class Condition
 	Reg = /([><]*=*)(\s*)(\d+)/
 
 	def self.from_s(str)
-		results = str.scan(Reg).select { |result| result[0] + result[1] != "" }
+		results = str.scan(Reg).select { |result| result[0] + result[1] != '' }
 		return nil if results == []
 		result = results[0]
 		return Condition.new(result[0] + result[1], result[2].to_i)

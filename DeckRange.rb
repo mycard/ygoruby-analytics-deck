@@ -12,13 +12,13 @@ class DeckRange
 
 	def classified(deck)
 		case range
-			when "main"
+			when 'main'
 				return deck.main_classified
-			when "side"
+			when 'side'
 				return deck.side_classified
-			when "ex"
+			when 'ex'
 				return deck.ex_classified
-			when "all"
+			when 'all'
 				return deck.cards_classified
 			else
 				return deck.cards_classified
@@ -27,13 +27,13 @@ class DeckRange
 
 	def [](deck)
 		case range
-			when "main"
+			when 'main'
 				return deck.main
-			when "side"
+			when 'side'
 				return deck.side
-			when "ex"
+			when 'ex'
 				return deck.ex
-			when "all"
+			when 'all'
 				return deck.main + deck.side + deck.ex
 			else
 				return deck.main + deck.side + deck.ex

@@ -63,4 +63,10 @@ def outputTest
 	File.open("#{File.dirname __FILE__}/Server/example.json", "w") {|f| f.write JSON.pretty_generate json}
 end
 
-outputTest
+def startTest
+	require File.dirname(__FILE__) + '/DeckIdentifier.rb'
+	DeckIdentifier.global.register_dir File.dirname(__FILE__) + '/Definition'
+	DeckIdentifier.global.finish
+end
+
+startTest

@@ -2,21 +2,14 @@ require File.dirname(__FILE__) + '/Classification.rb'
 require File.dirname(__FILE__) + '/Tag.rb'
 
 class DeckType < Classification
-	class << self
-		attr_accessor :decks
-	end
-	@@decks    = []
-	self.decks = @@decks
-
-	attr_accessor :tags
-
+	attr_accessor :check_tags
+	attr_accessor :force_tags, :refused_tags
+	
 	def load_json(json)
 		super
-		@tags = json["tags"]
-		@tags = [] if @tags == nil
-		@tags = [] unless @tags.is_a? Array
-		@tags = @tags.select { |tag| Tag.from_json tag, false }
-		@@decks.push self
+		@check_tags = load_named_array(json, %w(check_tags tags)).select { |tag| Tag.from_json tag }
+		@force_tags =load_named_array(json, 'refused_tags').select { |tag| Tag.from_json tag }
+		@refused_tags =load_named_array(json, 'force_tags').select { |tag| Tag.from_json tag }
 	end
 
 	def self.from_json(json)
@@ -28,28 +21,16 @@ class DeckType < Classification
 	def [](deck)
 		match = super
 		return false unless match
-		return [] if @tags == nil
+		return [] if @check_tags == nil
 		@tags.select { |tag| tag[deck] }
 	end
-
-	def self.[](deck)
-		for type in @@decks
-			answer = type[deck]
-			return [type, answer] if answer
-		end
-		nil
-	end
-
-	def self.sort!
-		@@decks.sort! { |d1, d2| d1.priority <=> d2.priority }
-	end
-
+	
 	def to_hash
-		base      = super
-		tags_hash = []
-		tags.each { |tag| tags_hash.push tag.to_hash }
-		base[:tags] = tags_hash
-		base[:type] = "deck"
+		base              = super
+		base[:check_tags] = @check_tags.map { |tag| tag.to_hash }
+		base[:force_tags] = @force_tags.map { |tag| tag.to_hash }
+		base[:refused_tags] = @refused_tags.map { |tag| tag.to_hash }
+		base[:type] = 'deck'
 		base
 	end
 

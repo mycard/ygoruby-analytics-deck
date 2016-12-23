@@ -93,11 +93,11 @@ class DeckIdentifierCompiler
 		# error if type == nil
 		case type
 			when 'deck'
-				return process_line_identifier line, 'deck'
+				return process_line_classification line, 'deck'
 			when 'tag', 'check tag'
-				return process_line_identifier line, 'tag'
-			when 'identifier'
-				return process_line_identifier line
+				return process_line_classification line, 'tag'
+			when 'classification'
+				return process_line_classification line
 			when 'and', '&', '&&'
 				return process_line_restrains line, 'and'
 			when 'or', '|', '||'
@@ -154,7 +154,7 @@ class DeckIdentifierCompiler
 		end
 		# 你是不是智障忘记写冒号了？
 		check_line.downcase!
-		start_flags = ['deck', 'tag', 'check tag', 'identifier', 'and', '&', '&&', 'or', '|', '||', 'restrains', 'card', 'set', 'series', 'series', 'priority', 'config']
+		start_flags = ['deck', 'tag', 'check tag', 'classification', 'and', '&', '&&', 'or', '|', '||', 'restrains', 'card', 'set', 'series', 'series', 'priority', 'config']
 		start_flags.each do |start_flag|
 			if check_line.start_with? start_flag
 				line.replace line[(start_flag.length)..-1]
@@ -191,9 +191,9 @@ class DeckIdentifierCompiler
 		obj
 	end
 	
-	def process_line_identifier(content, force_type = nil)
-		priority   = separate_identifier_priority content
-		force_type = guess_identifier_type content if force_type == nil
+	def process_line_classification(content, force_type = nil)
+		priority   = separate_classification_priority content
+		force_type = guess_classification_type content if force_type == nil
 		deck_name  = content.strip
 		add_content_to_focus((force_type + 's').to_sym, {
 				type:     force_type,
@@ -202,16 +202,16 @@ class DeckIdentifierCompiler
 		}, true)
 	end
 	
-	def guess_identifier_type(identifier_name)
+	def guess_classification_type(classification_name)
 		scans = name.scan Constants::TagIdentifierReg
 		return 'deck' if scans.count == 0
-		identifier_name.replace scans[0]
+		classification_name.replace scans[0]
 		'tag'
 	end
 	
-	def separate_identifier_priority(identifier_name)
+	def separate_classification_priority(classification_name)
 		priority = 0
-		identifier_name.gsub! Constants::PriorityIdentifierReg do |match|
+		classification_name.gsub! Constants::PriorityIdentifierReg do |match|
 			priority = $1.to_i
 			''
 		end
