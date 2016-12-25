@@ -14,13 +14,13 @@ class DeckIdentifier
 	
 	def register(obj)
 		if obj.is_a? Array
-			logger.info "Loaded #{obj.count} definitions."
+			logger.info "#{environment_name} Loaded #{obj.count} definitions."
 			obj.each { |child| register child }
 		elsif obj.is_a? DeckType
-			logger.info "Loaded 1 deck definition: #{obj.name}"
+			logger.info "#{environment_name} Loaded 1 deck definition: #{obj.name}"
 			@decks.push obj
 		elsif obj.is_a? Tag
-			logger.info "Loaded 1 tag definition: #{obj.name}"
+			logger.info "#{environment_name} Loaded 1 tag definition: #{obj.name}"
 			@tags.push obj
 			if obj.is_global?
 				@global_tags.push obj
@@ -31,6 +31,13 @@ class DeckIdentifier
 	def register_dir(dir_path)
 		files = Dir.glob File.join dir_path, '*.*'
 		files.each { |file| self.register_file file }
+	end
+	
+	def register_config
+		config = $config[File.dirname __FILE__]['Definitions']
+		config = [config] if config.is_a? String
+		config = [] unless config.is_a? Array
+		config.each { |path| register_dir path }
 	end
 	
 	def register_file(file_path)
@@ -109,12 +116,32 @@ class DeckIdentifier
 	end
 	
 	def sort!
-		
+		@decks.sort { |deckA, deckB| deckB.priority <=> deckA.priority }
+		@global_tags.sort { |deckA, deckB| deckB.priority <=> deckA.priority }
 	end
 	
 	def finish
 		search_raw_tags
 		sort!
+	end
+	
+	def recognize(deck)
+		# 卡组检查
+		deck, tags  = @decks[deck]
+		# Tag 检查
+		global_tags = @global_tags[deck]
+		# 联合
+		tags        = [] if tags == nil
+		tags        += global_tags
+		# 提取名字
+		deck = deck.name
+		tags = tags.map { |tag| tag.name }
+		# 返回
+		[deck, tags]
+	end
+	
+	def [](deck)
+		recognize	deck
 	end
 	
 	@@global = DeckIdentifier.new 'global'

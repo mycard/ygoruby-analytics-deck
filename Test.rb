@@ -65,8 +65,7 @@ end
 
 def startTest
 	require File.dirname(__FILE__) + '/DeckIdentifier.rb'
-	DeckIdentifier.global.register_dir File.dirname(__FILE__) + '/Definition'
-	DeckIdentifier.global.finish
+	DeckIdentifier.global.register_config
 end
 
 startTest
