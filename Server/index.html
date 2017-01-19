@@ -2,15 +2,13 @@
 <html lang="en">
 <link>
 <meta charset="UTF-8">
-<title>鉴别器管理</title>
+<title>今天你家超主流上位了嘛</title>
 <script src="./bower_components/jquery/dist/jquery.min.js"></script>
 <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="./bs-doc.css">
+<link rel="stylesheet" href="./bower_components/bootstrap-fileinput/css/fileinput.min.css">
+<link rel="stylesheet" href="css/bs-doc.css">
 <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="./restrain.js"></script>
-<script src="./classification.js"></script>
-<script src="./generationsAjax.js"></script>
-<script src="./toolbarAjax.js"></script>
+<!--<script src="./bower_components/bootstrap-fileinput/js/fileinput.min.js"></script>-->
 <meta charset="utf-8">
 <style type="text/css">
     html, body {
@@ -24,49 +22,98 @@
 </head>
 <body>
 <div class="container">
-    <h1>鉴别器辣鸡在线编译</h1>
-
-    <div class="col-sm-6 col-md-6 col-xs-6" id="input" style="height: 100%">
+    <h1>辣鸡鉴别管理器</h1>
+    <div class="col-sm-6 col-md-6 col-xs-6" style="height: 100%">
         <div class="row">
-            <div class="btn-group btn-group-justified">
-                <a type="button" class="btn btn-primary" role="button" href="#" id="generate">生成</a>
-                <a type="button" class="btn btn-default" role="button" href="#" id="commit">提交</a>
+            <div class="panel panel-warning" id="panel-management">
+                <div class="panel-heading">
+                    管理环境：
+                    <span class="dropdown">
+                        <button class="btn btn-warning dropdown-toggle" type="button" id="dropdown-environment"
+                                data-toggle="dropdown">
+                            测试
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-environment">
+                            <li role="menuitem"><a href="#" id="btn-environment-choose-test">测试</a></li>
+                            <li role="menuitem"><a href="#" id="btn-environment-choose-product">生产</a></li>
+                        </ul>
+                    </span>
+                </div>
+                <div class="panel-body" id="manage-body-main">
+                    <div class="panel">
+                        <div class="input-group">
+                            <span class="input-group-addon">管理密码</span>
+                            <input type="text" class="form-control" id="input-password" placeholder="password">
+                        </div>
+                    </div>
+                    <div class="panel" id="panel-test-board">
+                        <div class="btn-group btn-group-justified" role="group" id="dropdown-environemnt-test">
+                            <a type="button" class="btn btn-default" role="button" href="#"
+                               id="btn-compile-file">编译文件</a>
+                            <a type="button" class="btn btn-default" role="button" href="#" id="btn-test-file">卡组测试</a>
+                            <a type="button" class="btn btn-warning" role="button" href="#" id="btn-reset-environment">重置环境</a>
+                        </div>
+                    </div>
+                    <div class="panel" id="panel-product-board">
+                        <div class="btn-group btn-group-justified" role="group" id="dropdown-environemnt-product">
+                            <a type="button" class="btn btn-default" role="button" href="#" id="btn-pull-dir">拉取列表</a>
+                            <a type="button" class="btn btn-default" role="button" href="#" id="btn-push-file">上传文件</a>
+                            <!--<a ty™e="button" class="btn btn-danger" role="button" href="#" id="btn-delete-file">移除文件</a>-->
+                            <a type="button" class="btn btn-danger" role="button" href="#"
+                               id="btn-restart-service">重启服务</a>
+                        </div>
+                    </div>
+                    <div class="panel" id="panel-git-board">
+                        <div class="btn-group btn-group-justified" role="group" id="dropdown-git-product">
+                            <a type="button" class="btn btn-default" role="button" href="#" id="btn-pull-git">拉取 Git</a>
+                            <a type="button" class="btn btn-danger" role="button" href="#" id="btn-push-git">推送 Git</a>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <input id="manage-input-file" type="file" class="file">
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="row" style="height: 100%">
-            <div class="form-group" style="height: 100%">
-            <textarea class="form-control" autofocus="true" id="inputDeckdef"
-                      style="margin: 10px 0 0 0; width:100%; height: 100%; resize: none">暗黑界
- ! [暗黑界] > 20
- ! 暗黑界的龙神 = 3
- tag: 泉
-  ! 魔力之泉 = 3
-我我我
- ! [我我我] > 10
-(迪克)
- global
- ! 达克星 side >= 1
+        <div class="row" style="height: 100%;">
+            <div class="panel panel-info" style="height: 100%;">
+                <div class="panel-heading">
+                    当前文件：
+                    <span class="dropdown">
+                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdown-editing-file"
+                                data-toggle="dropdown">
+                            新文件
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-editing-file"
+                            id="dropdown-file-lists">
+                            <li role="menuitem"><a href="#" id="menuitem-new-file">新文件</a></li>
+                        </ul>
+                    </span>
+                </div>
+                <div class="panel-body" style="height: 100%;">
+                    <div class="form-group" style="height: 100%">
+            <textarea class="form-control" autofocus="true" id="txarea-main"
+                      style="margin: 0 0 0 0; width:100%; height: 90%; resize: none" placeholder="这里什么都没有哦">
             </textarea>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-sm-6 col-md-6 col-xs-6" id="generated">
+    <div class="col-sm-6 col-md-6 col-xs-6">
         <div class="panel panel-success">
             <div class="panel-heading">
-                生成内容：
+                预览内容：
                 <span class="dropdown">
-                    <button class="btn btn-success dropdown-toggle" type="button" id="generation"
+                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdown-classification-list"
                             data-toggle="dropdown">
                         炼装
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="generation" id="deckDefinitions">
-                        <li role="menuitem"><a href="#">炼装</a></li>
-                        <li role="menuitem"><a href="#">黑羽</a></li>
-                        <li role="menuitem"><a href="#">白光火</a></li>
-                        <li role="menuitem"><a href="#">TAG</a></li>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-classification-list"
+                        id="list-classifications">
                     </ul>
                 </span>
             </div>
@@ -74,11 +121,10 @@
                 <div class="row">
                     <div class="col-sm-6 col-md-6 col-xs-6">
                         <div class="panel panel-primary">
-                            <div class="panel-heading" id="typeName">
+                            <div class="panel-heading" id="type-name">
                                 卡组
                             </div>
-                            <div class="panel-body" id="deckName">
-                                炼装
+                            <div class="panel-body" id="deck-name">
                             </div>
                         </div>
                     </div>
@@ -87,8 +133,7 @@
                             <div class="panel-heading">
                                 优先度
                             </div>
-                            <div class="panel-body" id="deckPriority">
-                                7
+                            <div class="panel-body" id="deck-priority">
                             </div>
                         </div>
                     </div>
@@ -97,35 +142,14 @@
                     <div class="panel-heading">
                         约束
                     </div>
-                    <ul class="list-group" id="restrains">
-                        <a href="#" class="list-group-item">
-                            <img src="http://cdn233.my-card.in/ygopro/pics/thumbnail/60473572.jpg">
-                            <img src="http://cdn233.my-card.in/ygopro/pics/thumbnail/33256280.jpg">
-                            <img src="http://cdn233.my-card.in/ygopro/pics/thumbnail/7868571.jpg">
-                            <img src="http://cdn233.my-card.in/ygopro/pics/thumbnail/69351984.jpg">
-                            <img src="http://cdn233.my-card.in/ygopro/pics/thumbnail/18716735.jpg">
-                        </a>
-                        <a href="#" class="list-group-item disabled">
-                            <kbd class="set">炼装</kbd> <code>>=</code> <kbd class="set">5</kbd>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <img src="http://cdn233.my-card.in/ygopro/pics/thumbnail/31178212.jpg">
-                            <img src="http://cdn233.my-card.in/ygopro/pics/thumbnail/31178212.jpg">
-                            <img src="http://cdn233.my-card.in/ygopro/pics/thumbnail/31178212.jpg">
-                        </a>
-                        <a href="#" class="list-group-item disabled">
-                            <kbd class="card">威风妖怪 麒麟</kbd> <code>>=</code> <kbd class="card">3</kbd>
-                        </a>
+                    <ul class="list-group" id="preview-restrains">
                     </ul>
                 </div>
                 <div class="panel panel-info">
-                    <div class="panel-heading" id="extraMessageName">
+                    <div class="panel-heading" id="preview-extra-message-name">
                         标签
                     </div>
-                    <ul class="list-group" id="extraMessageList">
-                        <a href="#" class="list-group-item">马</a>
-                        <a href="#" class="list-group-item">豪</a>
-                        <a href="#" class="list-group-item">有</a>
+                    <ul class="list-group" id="preview-extra-message-list">
                     </ul>
                 </div>
             </div>
@@ -134,5 +158,12 @@
 </div>
 
 </div>
+<script src="coffee/config.js"></script>
+<script src="coffee/editingFileList.js"></script>
+<script src="coffee/restrain.js"></script>
+<script src="coffee/classification.js"></script>
+<script src="coffee/generationsAjax.js"></script>
+<script src="coffee/management.js"></script>
+<script src="coffee/notification.js"></script>
 </body>
 </html>

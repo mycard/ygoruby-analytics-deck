@@ -1,23 +1,23 @@
 #$ = require "jquery"
 
-this.restrain_html = (restrain_json) ->
+this.restrainHTML = (restrain_json) ->
   [
-    restrain_example_html(restrain_json),
-    restrain_figure_html(restrain_json)
+    restrainExampleHTML(restrain_json),
+    restrainFigureHTML(restrain_json)
   ]
 
-restrain_example_html = (restrain_json)->
-  ids = restrain_ids restrain_json
+restrainExampleHTML = (restrain_json)->
+  ids = restrainIds restrain_json
   a = $ "<a></a>"
   a.addClass "list-group-item"
   for id in ids
-    a.append restrain_img_html id
+    a.append restrainImgHTML id
   a
 
-restrain_img_html = (id) ->
+restrainImgHTML = (id) ->
   "<img src='http://cdn233.my-card.in/ygopro/pics/thumbnail/#{id}.jpg'>"
 
-restrain_ids = (restrain_json) ->
+restrainIds = (restrain_json) ->
   type = restrain_json.type
   if type == 'card'
     return Array(restrain_json.condition.number).fill restrain_json.id
@@ -31,28 +31,28 @@ restrain_ids = (restrain_json) ->
     else
       return ids.times(3).slice 0, number
 
-restrain_figure_html = (restrain_json) ->
+restrainFigureHTML = (restrain_json) ->
   a = $ "<a></a>"
   a.addClass "list-group-item disabled"
-  a.append restrain_type_html restrain_json
-  a.append restrain_range_html restrain_json.range
-  a.append restrain_condition_html restrain_json.condition, restrain_json.type
+  a.append restrainTypeHTML restrain_json
+  a.append restrainRangeHTML restrain_json.range
+  a.append restrainConditionHTML restrain_json.condition, restrain_json.type
   a
 
-restrain_condition_html = (condition_json, type)->
+restrainConditionHTML = (condition_json, type)->
   operator = condition_json.operator
   number = condition_json.number
   " <code>#{operator}</code> <kbd class='#{type}'>#{number}</kbd>"
 
-restrain_range_html = (range_json)->
+restrainRangeHTML = (range_json)->
   if range_json == "all"
     ""
   else
     " <kbd class=\"#{range_json}\">#{range_json}</kbd>"
 
-restrain_type_html = (restrain_json) ->
+restrainTypeHTML = (restrain_json) ->
   type = restrain_json.type
-  name = restrain_json.name
+  name = restrain_json.name['zh-CN']
   "<kbd class='#{type}'>#{name}</kbd>"
 
 ###
@@ -79,5 +79,5 @@ Array.prototype.times = (times) ->
   answer
 
 this.help = (index)->
-  jq = restrain_html ex[index].restrain
+  jq = restrainHTML ex[index].restrain
   $('div.row:last').append jq

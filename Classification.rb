@@ -38,11 +38,12 @@ class Classification
 	end
 	
 	def to_hash
-		{
+		hash = {
 				name:     @name,
-				priority: @priority,
-				restrain: @restrain.to_hash
+				priority: @priority
 		}
+		hash[:restrain] = @restrain.to_hash if @restrain != nil
+		hash
 	end
 	
 	def to_json(*args)

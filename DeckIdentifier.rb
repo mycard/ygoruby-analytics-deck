@@ -11,6 +11,29 @@ class DeckIdentifier
 		@decks            = []
 		@environment_name = name
 	end
+
+	def classificationize(obj)
+			if obj.is_a? Array
+				obj.map { |child| classificationize child }
+			elsif obj.is_a? Hash
+				type = obj['type']
+				type = type.downcase unless type == nil
+				if type == nil
+					logger.warn 'no type obj: ' + obj.inspect
+					nil
+				elsif type == 'deck'
+					DeckType.from_json obj
+				elsif type == 'tag'
+					Tag.from_json obj
+				else
+					logger.warn "can't recognize type #{type}"
+					nil
+				end
+			else
+				logger.warn "can't recognize classification #{obj}"
+				nil
+			end
+	end
 	
 	def register(obj)
 		if obj.is_a? Array
@@ -72,18 +95,18 @@ class DeckIdentifier
 	def register_yaml_str(str)
 		require 'yaml'
 		root = YAML.load str
-		register root
+		register classificationize root
 	end
 	
 	def register_json_str(str)
 		require 'json'
 		root = JSON.parse str
-		register root
+		register classificationize root
 	end
 	
 	def register_deckdef_file(file)
 		root = DeckIdentifierCompiler.new.compile_file file
-		register root
+		register classificationize root
 	end
 	
 	def clear
@@ -125,28 +148,77 @@ class DeckIdentifier
 		sort!
 	end
 	
+	def polymerize(tags)
+		tags = tags.select { |tag| tag.can_upgrade? }
+		return nil if tags.count == 0
+		priority = tags[0].priority
+		names    = []
+		for tag in tags
+			(priority - tag.priority <= 1) ? names.push(tag): break
+		end
+		names.join ''
+	end
+	
 	def recognize(deck)
 		# 卡组检查
 		deck, tags  = @decks[deck]
 		# Tag 检查
 		global_tags = @global_tags[deck]
+		# 若卡组检查没有结果，选择 Tag 能升级者拼成一个 deck 名
+		deck        = polymerize global_tags if deck == nil
+		# 若还是没有结果，谜
+		return [] if deck == nil
 		# 联合
-		tags        = [] if tags == nil
-		tags        += global_tags
+		tags = [] if tags == nil
+		tags += global_tags
 		# 提取名字
-		deck = deck.name
+		deck = deck.name unless deck.is_a? String
 		tags = tags.map { |tag| tag.name }
 		# 返回
 		[deck, tags]
 	end
 	
 	def [](deck)
-		recognize	deck
+		recognize deck
 	end
 	
 	@@global = DeckIdentifier.new 'global'
 	
 	def self.global
 		return @@global
+	end
+	
+	# 前台服务器用的 API 🚪
+	def self.check_access_key(key)
+		return key == $config[File.dirname __FILE__]['Access Key']
+	end
+	
+	def self.config_first_dir
+		config = $config[File.dirname __FILE__]['Definitions']
+		config = config[0] if config.is_a? Array
+		config
+	end
+	
+	def self.get_config_file_list
+		dir = self.config_first_dir
+		Dir.glob(dir + '/*.deckdef').map { |file| File.basename file, '.deckdef'}
+	end
+	
+	def self.get_config_file(file_name)
+		file_name = file_name.gsub('..', '').gsub('/', '')
+		file_name = File.join self.config_first_dir, file_name
+		File.open(file_name) { |f| f.read }
+	end
+	
+	def self.save_config_file_to(file_name, file_content)
+		file_name = file_name.gsub('..', '').gsub('/', '')
+		file_name = File.join self.config_first_dir, file_name
+		File.open(file_name, 'w') { |f| f.write file_content }
+	end
+	
+	def self.remove_config_file(file_name)
+		file_name = file_name.gsub('..', '').gsub('/', '')
+		file_name = File.join self.config_first_dir, file_name
+		File.delete file_name
 	end
 end

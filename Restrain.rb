@@ -10,7 +10,7 @@ class Restrain
 	attr_accessor :range
 	
 	def self.from_json(json)
-		json     = { "type" => "group", "restrains" => json } if json.is_a? Array
+		json     = { 'type' => 'group', 'restrains' => json } if json.is_a? Array
 		type     = json['type']
 		type     = type.downcase unless type.nil?
 		restrain = RestrainGroup.from_json(json) if type == 'group' or json['restrains'] != nil
@@ -122,7 +122,7 @@ class RestrainCardID < Restrain
 	def to_hash
 		base        = super
 		base[:id]   = @id
-		base[:name] = Card[@id].name
+		base[:name] = Card[@id].name if Card[@id] != nil
 		base
 	end
 	

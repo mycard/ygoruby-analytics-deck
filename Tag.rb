@@ -27,7 +27,11 @@ class Tag < Classification
 	end
 	
 	def self.is_global?
-		return @configs.include?
+		return @configs.include? 'global'
+	end
+	
+	def self.can_upgrade?
+		return @configs.include? 'upgrade'
 	end
 
 	def to_hash

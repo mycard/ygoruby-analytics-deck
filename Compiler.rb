@@ -10,7 +10,7 @@ class DeckIdentifierCompiler
 		TagIdentifier      = '\((.+?)\)'
 		RestrainIdentifier = '!'
 		
-		CommentReg            = Regexp.new ('(?!\\'+ CommentCharacter + ')' + CommentCharacter)
+		CommentReg            = Regexp.new ('(?!\\\\'+ CommentCharacter + ')' + CommentCharacter)
 		TabSpaceString        = ' ' * TabSpaceLength
 		SetIdentifierReg      = Regexp.new SetIdentifier
 		TagIdentifierReg      = Regexp.new TagIdentifier
@@ -44,6 +44,8 @@ class DeckIdentifierCompiler
 	end
 	
 	def compile_line(line)
+		# 忽略完全的空行
+		return if line.length == 0
 		# 移除注释
 		remove_line_comment line
 		# 计算缩进并确定其父
@@ -51,8 +53,8 @@ class DeckIdentifierCompiler
 		decide_lay tab
 		# 取消缩进
 		line.strip!
-		# 空行忽略
-		return if line.strip.length == 0
+		# 忽略带缩进的空行
+		return if line.length == 0
 		# 输出到控制台
 		logger.debug 'processing line ' + "[#{tab}] " + line
 		# 将内容部分编译
@@ -195,10 +197,10 @@ class DeckIdentifierCompiler
 		priority   = separate_classification_priority content
 		force_type = guess_classification_type content if force_type == nil
 		deck_name  = content.strip
-		add_content_to_focus((force_type + 's').to_sym, {
-				type:     force_type,
-				priority: priority,
-				name:     deck_name
+		add_content_to_focus(force_type + 's', {
+				'type'     => force_type,
+				'priority' => priority,
+				'name'     => deck_name
 		}, true)
 	end
 	
@@ -229,21 +231,21 @@ class DeckIdentifierCompiler
 		type     = guess_restrain_type name
 		type     = force_type if force_type != nil
 		# 构造约束
-		restrain = { type: type }
+		restrain = { 'type' => type }
 		# 判断是卡片名字还是 id
 		if name.to_i > 0
-			restrain[:id] = name.to_i
+			restrain['id'] = name.to_i
 		else
-			restrain[:name] = name
+			restrain['name'] = name
 			# 如果是按名称标记的卡片，那么先换算 ID。
 			# restrain[:id]   = search_id_for_card_name name if type == 'card'
 		end
 		# 范围
-		restrain[:range] = match[2] if match[2] != nil
+		restrain['range'] = match[2] if match[2] != nil
 		# 约束本体
-		restrain[:to]    = match[4..7].join ''
+		restrain['to']    = match[4..7].join ''
 		# 加入上级
-		add_content_to_focus :restrain, restrain, true
+		add_content_to_focus 'restrain', restrain, true
 	end
 	
 	def guess_restrain_type(name)
@@ -255,11 +257,11 @@ class DeckIdentifierCompiler
 	
 	def process_line_restrains(content, force_relation = nil)
 		force_relation = guess_restrains_relation content if force_relation == nil
-		add_content_to_focus(:restrain, {
-				type:      'group',
-				operator:  force_relation,
-				restrains: []
-		}, true)[:restrains] # 偷天换日
+		add_content_to_focus('restrain', {
+				'type' =>      'group',
+				'operator' =>  force_relation,
+				'restrains' => []
+		}, true)['restrains'] # 偷天换日
 	end
 	
 	def guess_restrains_relation(content)
@@ -267,11 +269,11 @@ class DeckIdentifierCompiler
 	end
 	
 	def process_line_config(content)
-		add_content_to_focus :config, content.strip, true
+		add_content_to_focus 'config', content.strip, true
 	end
 	
 	def process_line_priority(content)
-		add_content_to_focus :priority, content.strip.to_i, true
+		add_content_to_focus 'priority', content.strip.to_i, true
 	end
 	
 	def search_id_for_card_name(card_name)
