@@ -7,9 +7,9 @@ class DeckType < Classification
 	
 	def load_json(json)
 		super
-		@check_tags = load_named_array(json, %w(check_tags tags)).select { |tag| Tag.from_json tag }
-		@force_tags =load_named_array(json, 'refused_tags').select { |tag| Tag.from_json tag }
-		@refused_tags =load_named_array(json, 'force_tags').select { |tag| Tag.from_json tag }
+		@check_tags = load_named_array(json, %w(check_tags tags)).map { |tag| Tag.from_json tag }
+		@force_tags = load_named_array(json, 'refused_tags').map { |tag| Tag.from_json tag }
+		@refused_tags =load_named_array(json, 'force_tags').map { |tag| Tag.from_json tag }
 	end
 
 	def self.from_json(json)
@@ -22,7 +22,7 @@ class DeckType < Classification
 		match = super
 		return false unless match
 		return [] if @check_tags == nil
-		@tags.select { |tag| tag[deck] }
+		@check_tags.select { |tag| tag[deck] }
 	end
 	
 	def to_hash
@@ -36,5 +36,9 @@ class DeckType < Classification
 
 	def to_json(*args)
 		to_hash().to_json
+	end
+	 
+	def to_s
+		"deck type [#{name}]"
 	end
 end

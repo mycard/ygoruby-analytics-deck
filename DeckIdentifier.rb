@@ -130,8 +130,8 @@ class DeckIdentifier
 	end
 	
 	def search_raw_tag_array(tag_array)
-		tag_array.each_with_index do |index, tag|
-			next unless tag.is_raws
+		tag_array.each_with_index do |tag, index|
+			next unless tag.is_raw?
 			tag_array[index] = @tag_hash[tag.name]
 			logger.info "not found named tag #{tag.name}" if tag_array[index] == nil
 		end
@@ -161,9 +161,9 @@ class DeckIdentifier
 	
 	def recognize(deck)
 		# 卡组检查
-		deck, tags  = @decks[deck]
+		deck, tags  = recognize_deck deck
 		# Tag 检查
-		global_tags = @global_tags[deck]
+		global_tags = recognize_tag deck
 		# 若卡组检查没有结果，选择 Tag 能升级者拼成一个 deck 名
 		deck        = polymerize global_tags if deck == nil
 		# 若还是没有结果，谜
@@ -180,6 +180,18 @@ class DeckIdentifier
 	
 	def [](deck)
 		recognize deck
+	end
+	
+	def recognize_deck(deck)
+		for deck_type in @decks
+			answer = deck_type[deck]
+			return [deck_type, answer] if answer
+		end
+		nil
+	end
+	
+	def recognize_tag(deck)
+		@global_tags.select { |tag| tag[deck] }
 	end
 	
 	@@global = DeckIdentifier.new 'global'

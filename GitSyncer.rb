@@ -1,42 +1,26 @@
 module GitSyncer
 	def self.pull(path = nil)
-		path = 0 if path == nil
-		path = get_path path if path.is_a? Fixnum
-		if path == nil
-			console.warn 'try to pull a nil path'
-			return
-		end
+		path = get_path path
 		logger.info 'Git: pulling path ' + path
-		save_path
-		`cd #{path} & git pull origin --force`
-		load_path
+		answer = `cd #{path} && git pull origin master --force`
+		answer
 	end
 	
 	def self.push(path = nil)
-		path = 0 if path == nil
-		path = get_path path if path.is_a? Fixnum
-		if path == nil
-			console.warn 'try to pull a nil path'
-			return
-		end
+		path = get_path path
 		logger.info 'Git: pushing path ' + path
-		save_path
-		`cd #{path} & git add . & git commit -ad 'commit by program' & git push`
-		load_path
+		answer = `cd #{path} && git add . && git commit -q -m 'commit by program' && git push origin master`
+		answer
 	end
 	
-	def self.save_path
-		@@origin_path = File.expand_path('.')
-	end
-	
-	def self.load_path
-		`cd #{@@origin_path}`
-	end
-	
-	def self.get_path(index = 0)
+	def self.get_path(path = nil)
+		index = 0 if path == nil
+		index = path if path.is_a? Fixnum
+		return path if path.is_a? String
 		config = $config[File.dirname __FILE__]['Definitions']
 		config = [config] if config.is_a? String
 		config = [] unless config.is_a? Array
-		return config[index]
+		path = config[index]
+		return path
 	end
 end

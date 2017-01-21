@@ -83,12 +83,11 @@
                     <span class="dropdown">
                         <button class="btn btn-info dropdown-toggle" type="button" id="dropdown-editing-file"
                                 data-toggle="dropdown">
-                            新文件
+
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-editing-file"
                             id="dropdown-file-lists">
-                            <li role="menuitem"><a href="#" id="menuitem-new-file">新文件</a></li>
                         </ul>
                     </span>
                 </div>
@@ -103,13 +102,22 @@
         </div>
     </div>
     <div class="col-sm-6 col-md-6 col-xs-6">
-        <div class="panel panel-success">
+        <div class="panel panel-success" id="panel-answer">
+            <div class="panel-heading" id="answer-deck-name">
+                卡组辨识结果将会显示在这里
+            </div>
+            <div class="panel-body">
+                <ul class="list-group" id="answer-extra-message-list">
+                </ul>
+            </div>
+        </div>
+        <div class="panel panel-success" id="panel-preview">
             <div class="panel-heading">
                 预览内容：
                 <span class="dropdown">
                     <button class="btn btn-success dropdown-toggle" type="button" id="dropdown-classification-list"
                             data-toggle="dropdown">
-                        炼装
+
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-classification-list"
@@ -165,5 +173,6 @@
 <script src="coffee/generationsAjax.js"></script>
 <script src="coffee/management.js"></script>
 <script src="coffee/notification.js"></script>
+<script src="coffee/answer.js"></script>
 </body>
 </html>

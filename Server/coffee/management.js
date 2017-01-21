@@ -75,7 +75,7 @@
       data: getMainContent(),
       success: function(data) {
         showNotification('server answer - 200 - ' + data.length + ' objs', 'success');
-        return generations_set_html(data);
+        return generationSetHTML(data);
       },
       error: function(data) {
         return showNotification('server answer - ' + data.status + (" - " + data.responseText), 'danger');
@@ -89,7 +89,8 @@
       method: 'post',
       data: getMainContent(),
       success: function(data) {
-        return showNotification('server answer - 200', 'success');
+        showNotification('server answer - 200 - ' + data[0], 'success');
+        return setAnswerList(data);
       },
       error: function(data) {
         return showNotification('server answer - ' + data.status + (" - " + data.responseText), 'danger');

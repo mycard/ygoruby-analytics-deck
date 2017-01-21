@@ -1,4 +1,5 @@
-this.generations_set_html = (generations) ->
+this.generationSetHTML = (generations) ->
+  switchToPreview()
   #@generations = generations
   $("ul#list-classifications").empty()
   for generation in generations

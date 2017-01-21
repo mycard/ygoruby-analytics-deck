@@ -61,7 +61,7 @@ testCompileFileClicked = ->
     data: getMainContent()
     success: (data) ->
       showNotification 'server answer - 200 - ' + data.length + ' objs', 'success'
-      generations_set_html data
+      generationSetHTML data
     error: (data) ->
       showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
 
@@ -71,9 +71,11 @@ testTestFileClicked = ->
     method: 'post'
     data: getMainContent()
     success: (data) ->
-      showNotification 'server answer - 200', 'success'
+      showNotification 'server answer - 200 - ' + data[0], 'success'
+      setAnswerList data
     error: (data) ->
       showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
+
 
 testResetEnvironmentClicked = ->
   $.ajax

@@ -28,10 +28,10 @@ Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/compiler' do
 end
 
 Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/compiler/heavy' do
-	# halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
 	def_str = request.body.read
 	def_str.force_encoding 'utf-8'
-	obj = DeckIdentifierCompiler.new.compile_str def_str
+	obj     = DeckIdentifierCompiler.new.compile_str def_str
 	content = test_environment.classificationize obj
 	content_type 'application/json'
 	content.to_json
@@ -53,8 +53,8 @@ end
 
 Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/test' do
 	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
-	json    = request.body.read
-	deck    = Deck.from_hash json
+	content = request.body.read
+	deck    = Deck.load_ydk_str content
 	content = test_environment[deck]
 	content_type 'application/json'
 	content.to_json

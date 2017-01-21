@@ -22,15 +22,15 @@ class Tag < Classification
 		@configs = [] unless @configs.is_a? Array
 	end
 	
-	def self.is_raw?
+	def is_raw?
 		@restrain.nil? or @restrain == []
 	end
 	
-	def self.is_global?
+	def is_global?
 		return @configs.include? 'global'
 	end
 	
-	def self.can_upgrade?
+	def can_upgrade?
 		return @configs.include? 'upgrade'
 	end
 
@@ -42,5 +42,9 @@ class Tag < Classification
 
 	def to_json(*args)
 		to_hash().to_json
+	end
+	
+	def to_s
+		"tag #{name}"
 	end
 end
