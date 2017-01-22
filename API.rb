@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../../YgorubyBase/Deck.rb'
 require File.dirname(__FILE__) + '/Compiler.rb'
 require File.dirname(__FILE__) + '/GitSyncer.rb'
 
-Ygoruby::Plugins.apis.push 'get', '/deckIdentifier/json' do
+Plugin.api.push 'get', '/deckIdentifier/json' do
 	json    = request.body.read
 	deck    = Deck.from_hash json
 	content = DeckIdentifier.global[deck]
@@ -18,8 +18,8 @@ end
 ## 测试环境
 test_environment = DeckIdentifier.new 'test'
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/compiler' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/test/compiler' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, ' compiled a string file.'
 	def_str = request.body.read
 	def_str.force_encoding 'utf-8'
 	content = DeckIdentifierCompiler.new.compile_str def_str
@@ -27,8 +27,8 @@ Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/compiler' do
 	content.to_json
 end
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/compiler/heavy' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/test/compiler/heavy' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, ' compiled a string file and classificationized it.'
 	def_str = request.body.read
 	def_str.force_encoding 'utf-8'
 	obj     = DeckIdentifierCompiler.new.compile_str def_str
@@ -37,22 +37,22 @@ Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/compiler/heavy' do
 	content.to_json
 end
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/test' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, ' posted a string file into the test environment.'
 	json    = request.body.read
 	content = JSON.parse json
-	test_environment.register content
+	test_environment.register test_environment.classificationize DeckIdentifierCompiler.new.compile_str content
 	'finished'
 end
 
-Ygoruby::Plugins.apis.push 'delete', '/deckIdentifier/test' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'delete', '/deckIdentifier/test' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, ' requested to clear the test environment.'
 	test_environment.clear
 	'cleared'
 end
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/test' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/test/test' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, ' request to test a deck.'
 	content = request.body.read
 	deck    = Deck.load_ydk_str content
 	content = test_environment[deck]
@@ -60,15 +60,15 @@ Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/test' do
 	content.to_json
 end
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/load' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/test/load' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, ' requested to import production into test environment.'
 	test_environment.register_config
 	test_environment.finish
 	'loaded'
 end
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/test/reset' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/test/reset' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'reset the test environment.'
 	test_environment.clear
 	test_environment.register_config
 	test_environment.finish
@@ -77,46 +77,49 @@ end
 
 
 ## 工作环境
-Ygoruby::Plugins.apis.push 'get', '/deckIdentifier/product/list' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'get', '/deckIdentifier/product/list' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'requested the file list.'
 	content_type 'application/json'
 	DeckIdentifier.get_config_file_list.to_json
 end
 
-Ygoruby::Plugins.apis.push 'get', '/deckIdentifier/product' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'get', '/deckIdentifier/product' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'requested the file ' + params['filename']
 	DeckIdentifier.get_config_file params['filename'] + '.deckdef'
 end
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/product' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/product' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'posted the file ' + params['filename']
 	DeckIdentifier.save_config_file_to params['filename'] + '.deckdef', params['file']
 	'posted'
 end
 
-Ygoruby::Plugins.apis.push 'delete', '/deckIdentifier/product' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'delete', '/deckIdentifier/product' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'removed the file ' + params['filename']
 	DeckIdentifier.remove_config_file params['filename']
 	'removed'
 end
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/restart' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/restart' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'restarted the production server config.'
 	DeckIdentifier.global.clear
 	DeckIdentifier.global.register_config
 	'restart'
 end
 
 ## Git 操作
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/git/pull' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/git/pull' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'pulled from git.'
 	GitSyncer.pull
 	'fin'
 end
 
-Ygoruby::Plugins.apis.push 'post', '/deckIdentifier/git/push' do
-	halt 403 unless DeckIdentifier.check_access_key params['accesskey']
+Plugin.api.push 'post', '/deckIdentifier/git/push' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'pushed to the git.'
 	GitSyncer.push
 	'fin'
 end
 
+# 静态页面
+Plugin.api.push 'static', { ['/deckIdentifier/console/'] => 'Plugins/DeckIdentifier/Server/'} do
+end

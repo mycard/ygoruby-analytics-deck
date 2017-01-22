@@ -40,10 +40,10 @@ class DeckIdentifier
 			logger.info "#{environment_name} Loaded #{obj.count} definitions."
 			obj.each { |child| register child }
 		elsif obj.is_a? DeckType
-			logger.info "#{environment_name} Loaded 1 deck definition: #{obj.name}"
+			# logger.info "#{environment_name} Loaded 1 deck definition: #{obj.name}"
 			@decks.push obj
 		elsif obj.is_a? Tag
-			logger.info "#{environment_name} Loaded 1 tag definition: #{obj.name}"
+			# logger.info "#{environment_name} Loaded 1 tag definition: #{obj.name}"
 			@tags.push obj
 			if obj.is_global?
 				@global_tags.push obj
@@ -202,7 +202,20 @@ class DeckIdentifier
 	
 	# 前台服务器用的 API 🚪
 	def self.check_access_key(key)
-		return key == $config[File.dirname __FILE__]['Access Key']
+		return nil if key == nil
+		keys = $config[File.dirname __FILE__]['Access Keys']
+		return nil unless keys.has_key? key
+		keys[key]
+	end
+	
+	def self.quick_access_key(key, app, description)
+		user = check_access_key key
+		if user == nil
+			app.halt [403, 'wrong access key not in list']
+			return
+		else
+			logger.info "[#{user}] #{description}"
+		end
 	end
 	
 	def self.config_first_dir
