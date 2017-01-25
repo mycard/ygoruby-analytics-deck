@@ -11,28 +11,28 @@ class DeckIdentifier
 		@decks            = []
 		@environment_name = name
 	end
-
+	
 	def classificationize(obj)
-			if obj.is_a? Array
-				obj.map { |child| classificationize child }
-			elsif obj.is_a? Hash
-				type = obj['type']
-				type = type.downcase unless type == nil
-				if type == nil
-					logger.warn 'no type obj: ' + obj.inspect
-					nil
-				elsif type == 'deck'
-					DeckType.from_json obj
-				elsif type == 'tag'
-					Tag.from_json obj
-				else
-					logger.warn "can't recognize type #{type}"
-					nil
-				end
+		if obj.is_a? Array
+			obj.map { |child| classificationize child }
+		elsif obj.is_a? Hash
+			type = obj['type']
+			type = type.downcase unless type == nil
+			if type == nil
+				logger.warn 'no type obj: ' + obj.inspect
+				nil
+			elsif type == 'deck'
+				DeckType.from_json obj
+			elsif type == 'tag'
+				Tag.from_json obj
 			else
-				logger.warn "can't recognize classification #{obj}"
+				logger.warn "can't recognize type #{type}"
 				nil
 			end
+		else
+			logger.warn "can't recognize classification #{obj}"
+			nil
+		end
 	end
 	
 	def register(obj)
@@ -154,28 +154,28 @@ class DeckIdentifier
 		priority = tags[0].priority
 		names    = []
 		for tag in tags
-			(priority - tag.priority <= 1) ? names.push(tag): break
+			(priority - tag.priority <= 1) ? names.push(tag) : break
 		end
 		names.join ''
 	end
 	
 	def recognize(deck)
 		# 卡组检查
-		deck, tags  = recognize_deck deck
+		decktype, tags = recognize_deck deck
 		# Tag 检查
-		global_tags = recognize_tag deck
+		global_tags    = recognize_tag deck
 		# 若卡组检查没有结果，选择 Tag 能升级者拼成一个 deck 名
-		deck        = polymerize global_tags if deck == nil
+		decktype       = polymerize global_tags if decktype == nil
 		# 若还是没有结果，谜
-		return [] if deck == nil
+		return [] if decktype == nil
 		# 联合
-		tags = [] if tags == nil
-		tags += global_tags
+		tags     = [] if tags == nil
+		tags     += global_tags
 		# 提取名字
-		deck = deck.name unless deck.is_a? String
-		tags = tags.map { |tag| tag.name }
+		decktype = decktype.name unless decktype.is_a? String
+		tags     = tags.map { |tag| tag.name }
 		# 返回
-		[deck, tags]
+		[decktype, tags]
 	end
 	
 	def [](deck)
@@ -226,7 +226,7 @@ class DeckIdentifier
 	
 	def self.get_config_file_list
 		dir = self.config_first_dir
-		Dir.glob(dir + '/*.deckdef').map { |file| File.basename file, '.deckdef'}
+		Dir.glob(dir + '/*.deckdef').map { |file| File.basename file, '.deckdef' }
 	end
 	
 	def self.get_config_file(file_name)
