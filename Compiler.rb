@@ -152,6 +152,7 @@ class DeckIdentifierCompiler
 		end
 		# 是不是一个 Tag？
 		if check_line[Constants::TagIdentifierReg] != nil
+			line.replace line[1..-2]
 			return 'tag'
 		end
 		# 你是不是智障忘记写冒号了？
