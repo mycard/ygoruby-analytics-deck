@@ -121,5 +121,5 @@ Plugin.api.push 'post', '/analyze/deckIdentifier/git/push' do
 end
 
 # 静态页面
-Plugin.api.push 'static', { ['/analyze/deckIdentifier/'] => 'Plugins/DeckIdentifier/Server/'} do
+Plugin.api.push 'static', { ['/analyze/deckIdentifier/console/'] => 'Plugins/DeckIdentifier/Server/'} do
 end
