@@ -85,6 +85,8 @@ class DeckIdentifierCompiler
 			tab_count -= 1
 			next if @layers[tab_count] == nil
 			@focus = @layers[tab_count]
+			# 裁剪剩余的部分
+			@layers = @layers[0..tab_count]
 			return
 		end
 	end
@@ -259,8 +261,8 @@ class DeckIdentifierCompiler
 	def process_line_restrains(content, force_relation = nil)
 		force_relation = guess_restrains_relation content if force_relation == nil
 		add_content_to_focus('restrain', {
-				'type' =>      'group',
-				'operator' =>  force_relation,
+				'type'      => 'group',
+				'operator'  => force_relation,
 				'restrains' => []
 		}, true)['restrains'] # 偷天换日
 	end
