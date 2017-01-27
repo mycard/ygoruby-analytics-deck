@@ -154,7 +154,7 @@ class DeckIdentifier
 		priority = tags[0].priority
 		names    = []
 		for tag in tags
-			(priority - tag.priority <= 1) ? names.push(tag) : break
+			(priority - tag.priority <= 1) ? names.push(tag.name) : break
 		end
 		names.join ''
 	end
