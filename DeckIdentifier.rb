@@ -149,13 +149,14 @@ class DeckIdentifier
 	end
 	
 	def polymerize(tags)
-		tags = tags.select { |tag| tag.can_upgrade? }
-		return nil if tags.count == 0
-		priority = tags[0].priority
+		upgrade_tags = tags.select { |tag| tag.can_upgrade? }
+		return nil if upgrade_tags.count == 0
+		priority = upgrade_tags[0].priority
 		names    = []
-		for tag in tags
-			(priority - tag.priority <= 1) ? names.push(tag.name) : break
+		upgrade_tags.each do |tag|
+			(priority - tag.priority <= 1) ? names.push(tag.name) : next
 		end
+		tags.replace tags - upgrade_tags
 		names.join ''
 	end
 	
