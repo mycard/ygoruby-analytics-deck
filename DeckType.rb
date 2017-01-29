@@ -22,7 +22,7 @@ class DeckType < Classification
 		match = super
 		return false unless match
 		return [] if @check_tags == nil
-		@check_tags.select { |tag| tag[deck] }
+		@force_tags + @check_tags.select { |tag| tag[deck] }
 	end
 	
 	def to_hash

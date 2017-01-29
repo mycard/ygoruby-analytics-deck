@@ -1,4 +1,4 @@
-require './Compiler.rb'
+require File.dirname(__FILE__) + '/Compiler.rb'
 require 'json'
 
 logger.config.log_level = :debug
@@ -15,4 +15,9 @@ def test2
 	print JSON.pretty_generate obj
 end
 
-test2
+def set_test
+	compiler = DeckIdentifierCompiler.new
+	obj = compiler.compile_file File.open File.dirname(__FILE__) + '/Definition/test.deckdef'
+	print JSON.pretty_generate obj
+end
+set_test

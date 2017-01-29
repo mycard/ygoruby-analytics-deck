@@ -25,6 +25,8 @@ class DeckIdentifier
 				DeckType.from_json obj
 			elsif type == 'tag'
 				Tag.from_json obj
+			elsif type == 'set'
+				CardSet.from_hash obj
 			else
 				logger.warn "can't recognize type #{type}"
 				nil
@@ -48,6 +50,8 @@ class DeckIdentifier
 			if obj.is_global?
 				@global_tags.push obj
 			end
+		elsif obj.is_a? CardSet
+			# skip
 		end
 	end
 	
@@ -172,10 +176,13 @@ class DeckIdentifier
 		# 联合
 		tags     = [] if tags == nil
 		tags     += global_tags
+		# 移除被卡组类别拒绝的 Tags
+		tags     -= decktype.refused_tags if decktype.is_a? DeckType
 		# 提取名字
 		decktype = decktype.name unless decktype.is_a? String
 		tags     = tags.map { |tag| tag.name }
 		# 返回
+		logger.debug "deck is set #{decktype} [#{tags.join ', '}]"
 		[decktype, tags]
 	end
 	

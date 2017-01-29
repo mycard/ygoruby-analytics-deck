@@ -111,7 +111,13 @@ class DeckIdentifierCompiler
 			when 'card'
 				process_line_restrain line, 'card'
 			when 'set', 'series'
-				process_line_restrain line, 'set'
+				if @focus == @root
+					return process_line_user_defined_set line
+				else
+					process_line_restrain line, 'set'
+				end
+			when 'set card'
+				process_line_set_card line
 			when 'restrain', Constants::RestrainIdentifier
 				process_line_restrain line
 			when 'priority'
@@ -125,13 +131,6 @@ class DeckIdentifierCompiler
 		end
 		nil
 	end
-	
-	# def check_line_type(line)
-	#	  parts = line.split Constants::TypeSplitCharacter
-	#	  return nil if parts.count <= 1
-	#	  line.replace parts[1..-1].join Constants::TypeSplitCharacter
-	# 	parts[0].downcase
-	# end
 	
 	def check_line_type(line)
 		index = line.index Constants::TypeSplitCharacter
@@ -159,16 +158,26 @@ class DeckIdentifierCompiler
 		end
 		# 你是不是智障忘记写冒号了？
 		check_line.downcase!
-		start_flags = ['deck', 'tag', 'check tag', 'classification', 'and', '&', '&&', 'or', '|', '||', 'restrains', 'card', 'set', 'series', 'series', 'priority', 'config']
+		start_flags = ['deck', 'tag', 'check tag', 'classification', 'and', '&', '&&', 'or', '|', '||', 'restrains', 'card', 'set', 'set card' 'series', 'series', 'priority', 'config']
 		start_flags.each do |start_flag|
 			if check_line.start_with? start_flag
 				line.replace line[(start_flag.length)..-1]
 				return start_flag
 			end
 		end
-		# 如果是一个顶格 那我觉得你是个卡组定义
+		# 如果上级是一个自定义字段，那我觉得你是其中的一张卡。
+		if @focus.is_a? Hash and @focus['type'] == 'set'
+			return 'set card'
+		end
+		# 如果是一个顶格 那我觉得你是个卡组定义或者字段定义
 		if @focus == @root
-			return 'deck'
+			# 是卡组定义么？
+			if check_line[Constants::SetIdentifierReg] != nil
+				line.replace line[1..-1].strip
+				return 'set'
+			else
+				return 'deck'
+			end
 		end
 		# 那我也不知道了 丢个错吧
 		logger.error 'unknown line ' + line
@@ -282,5 +291,18 @@ class DeckIdentifierCompiler
 	def search_id_for_card_name(card_name)
 		card = Card[card_name]
 		card == nil ? -1 : card.id
+	end
+	
+	def process_line_user_defined_set(line)
+		add_content_to_focus 'sets', { 'type' => 'set', 'name' => line, 'ids' => [] }
+	end
+	
+	def process_line_set_card(line)
+		id = line.to_i
+	  id = search_id_for_card_name(line) if id <= 0
+		if id <= 0
+			logger.warn 'skipped set card line: ' + line
+		end
+		add_content_to_focus 'ids', id, true
 	end
 end

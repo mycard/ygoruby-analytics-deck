@@ -28,7 +28,7 @@ class Condition
 		"Condition [#{@operator} #{@number}]"
 	end
 
-	Reg = /([><]*=*)(\s*)(\d+)/
+	Reg = /([><=]*=*)(\s*)(\d+)/
 
 	def self.from_s(str)
 		results = str.scan(Reg).select { |result| result[0] + result[1] != '' }

@@ -23,7 +23,7 @@ class Restrain
 	end
 	
 	def [](deck)
-		false
+		0
 	end
 	
 	def to_hash
@@ -46,6 +46,7 @@ class RestrainGroup < Restrain
 		restrain           = RestrainGroup.new
 		restrain.operator  = json['operator']
 		restrain.operator  = 'and' if restrain.operator == nil
+		restrain.check_condition_operator
 		restrain.restrains = json['restrains']
 		restrain.restrains = [] if restrain.restrains == nil
 		restrain.restrains = restrain.restrains.map { |restrain| Restrain.from_json restrain }
@@ -55,15 +56,19 @@ class RestrainGroup < Restrain
 	
 	def [](deck)
 		results    = @restrains.map { |restrain| restrain[deck] }
-		true_count = (results.select { |result| result }).count
-		return @operator[true_count] if @operator.is_a? Condition
-		case @operator
-			when 'and', '&', '&&'
-				return true_count == results.count
-			when 'or', '|', '||'
-				return true_count >= 1
-			else
-				return false
+		if @operator.is_a? Condition
+			result_count = results.inject :+
+			return @operator[result_count] ? 1 : 0
+		else
+			true_count = (results.select { |result| result > 0 }).count
+			case @operator
+				when 'and', '&', '&&'
+					return (true_count == results.count) ? 1 : 0
+				when 'or', '|', '||'
+					return (true_count >= 1) ? 1 : 0
+				else
+					return 0
+			end
 		end
 	end
 	
@@ -77,6 +82,11 @@ class RestrainGroup < Restrain
 	
 	def to_json
 		to_hash().to_json
+	end
+	
+	def check_condition_operator
+		condition = Condition.from_s @operator
+		@operator = condition if condition != nil
 	end
 end
 
@@ -112,11 +122,11 @@ class RestrainCardID < Restrain
 	end
 	
 	def [](deck)
-		return false if id == nil or @range == nil or @condition == nil
+		return 0 if id == nil or @range == nil or @condition == nil
 		cards  = @range.classified deck
 		number = cards[@id]
 		number = 0 if number == nil
-		@condition[number]
+		@condition[number] ? 1 : 0
 	end
 	
 	def to_hash
@@ -154,11 +164,11 @@ class RestrainCardSet < Restrain
 	end
 	
 	def [](deck)
-		return false if @set == nil or @range == nil or @condition == nil
+		return 0 if @set == nil or @range == nil or @condition == nil
 		cards  = @range[deck]
 		number = 0
 		cards.each { |card| number += 1 if set.ids.include? card }
-		@condition[number]
+		@condition[number] ? 1 : 0
 	end
 	
 	def to_hash

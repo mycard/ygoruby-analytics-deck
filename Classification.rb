@@ -34,7 +34,7 @@ class Classification
 		if @restrain == nil
 			return false
 		end
-		return @restrain[deck]
+		return @restrain[deck] > 0
 	end
 	
 	def to_hash
