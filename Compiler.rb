@@ -55,6 +55,8 @@ class DeckIdentifierCompiler
 		line.strip!
 		# 忽略带缩进的空行
 		return if line.length == 0
+		# 裁剪
+		cut_layers tab
 		# 输出到控制台
 		logger.debug 'processing line ' + "[#{tab}] " + line
 		# 将内容部分编译
@@ -85,10 +87,12 @@ class DeckIdentifierCompiler
 			tab_count -= 1
 			next if @layers[tab_count] == nil
 			@focus = @layers[tab_count]
-			# 裁剪剩余的部分
-			@layers = @layers[0..tab_count]
 			return
 		end
+	end
+	
+	def cut_layers(tab_count)
+		@layers = @layers[0..tab_count]
 	end
 	
 	def compile_line_content(line)
@@ -294,7 +298,7 @@ class DeckIdentifierCompiler
 	end
 	
 	def process_line_user_defined_set(line)
-		add_content_to_focus 'sets', { 'type' => 'set', 'name' => line, 'ids' => [] }
+		add_content_to_focus 'sets', { 'type' => 'set', 'name' => line.strip, 'ids' => [] }
 	end
 	
 	def process_line_set_card(line)
