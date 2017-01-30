@@ -122,6 +122,8 @@ class DeckIdentifierCompiler
 				end
 			when 'set card'
 				process_line_set_card line
+			when 'inner set'
+				process_inner_set line
 			when 'restrain', Constants::RestrainIdentifier
 				process_line_restrain line
 			when 'priority'
@@ -157,7 +159,7 @@ class DeckIdentifierCompiler
 		end
 		# 是不是一个 Tag？
 		if check_line[Constants::TagIdentifierReg] != nil
-			line.replace line[1..-2]
+			line.replace $1.strip
 			return 'tag'
 		end
 		# 你是不是智障忘记写冒号了？
@@ -171,13 +173,18 @@ class DeckIdentifierCompiler
 		end
 		# 如果上级是一个自定义字段，那我觉得你是其中的一张卡。
 		if @focus.is_a? Hash and @focus['type'] == 'set'
-			return 'set card'
+			if check_line[Constants::SetIdentifierReg] != nil
+				check_line.replace $1.strip
+				return 'inner set'
+			else
+				return 'set card'
+			end
 		end
 		# 如果是一个顶格 那我觉得你是个卡组定义或者字段定义
 		if @focus == @root
 			# 是卡组定义么？
 			if check_line[Constants::SetIdentifierReg] != nil
-				line.replace line[1..-1].strip
+				line.replace $1.strip
 				return 'set'
 			else
 				return 'deck'
@@ -303,10 +310,14 @@ class DeckIdentifierCompiler
 	
 	def process_line_set_card(line)
 		id = line.to_i
-	  id = search_id_for_card_name(line) if id <= 0
+		id = search_id_for_card_name(line) if id <= 0
 		if id <= 0
 			logger.warn 'skipped set card line: ' + line
 		end
 		add_content_to_focus 'ids', id, true
+	end
+	
+	def process_inner_set(line)
+		add_content_to_focus 'ids', { 'type' => 'inner set', 'name' => line.strip }, true
 	end
 end
