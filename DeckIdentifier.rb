@@ -143,8 +143,8 @@ class DeckIdentifier
 	end
 	
 	def sort!
-		@decks.sort { |deckA, deckB| deckB.priority <=> deckA.priority }
-		@global_tags.sort { |deckA, deckB| deckB.priority <=> deckA.priority }
+		@decks.sort! { |deckA, deckB| deckB.priority <=> deckA.priority }
+		@global_tags.sort! { |deckA, deckB| deckB.priority <=> deckA.priority }
 	end
 	
 	def finish

@@ -8,8 +8,9 @@ class DeckType < Classification
 	def load_json(json)
 		super
 		@check_tags = load_named_array(json, %w(check_tags tags)).map { |tag| Tag.from_json tag }
-		@force_tags = load_named_array(json, 'refused_tags').map { |tag| Tag.from_json tag }
-		@refused_tags =load_named_array(json, 'force_tags').map { |tag| Tag.from_json tag }
+		@force_tags = load_named_array(json, 'force tags').map { |tag| Tag.from_json tag }
+		@refused_tags =load_named_array(json, 'refuse tags').map { |tag| Tag.from_json tag }
+		
 	end
 
 	def self.from_json(json)

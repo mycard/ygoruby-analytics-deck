@@ -131,9 +131,9 @@ class DeckIdentifierCompiler
 			when 'config'
 				process_line_config line
 			when 'refuse', 'refuse tag'
-				# not support now
+				process_line_special_tags line, 'refuse tags'
 			when 'force', 'force tag'
-				# not support now
+				process_line_special_tags line, 'force tags'
 		end
 		nil
 	end
@@ -319,5 +319,9 @@ class DeckIdentifierCompiler
 	
 	def process_inner_set(line)
 		add_content_to_focus 'ids', { 'type' => 'inner set', 'name' => line.strip }, true
+	end
+	
+	def process_line_special_tags(line, name)
+		add_content_to_focus name, {'type' => 'tag', 'name' => line.strip}, true
 	end
 end
