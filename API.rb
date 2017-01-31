@@ -104,6 +104,7 @@ Plugin.api.push 'post', '/analyze/deckIdentifier/restart' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'restarted the production server config.'
 	DeckIdentifier.global.clear
 	DeckIdentifier.global.register_config
+	DeckIdentifier.global.finish
 	'restart'
 end
 
