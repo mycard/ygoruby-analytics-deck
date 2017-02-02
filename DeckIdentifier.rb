@@ -177,13 +177,15 @@ class DeckIdentifier
 		tags     = [] if tags == nil
 		tags     += global_tags
 		# 移除被卡组类别拒绝的 Tags
-		tags     -= decktype.refused_tags if decktype.is_a? DeckType
+		# tags     -= decktype.refused_tags if decktype.is_a? DeckType
 		# 提取名字
-		decktype = decktype.name unless decktype.is_a? String
-		tags     = tags.map { |tag| tag.name }
+		decktype_name = decktype.name if decktype.is_a? DeckType
+		tags_name     = tags.map { |tag| tag.name }
+		# 移除被拒类别
+		tags_name -= decktype.refused_tags.map { |tag| tag.name } if decktype.is_a? DeckType
 		# 返回
 		logger.debug "deck is set #{decktype} [#{tags.join ', '}]"
-		[decktype, tags]
+		[decktype_name, tags_name]
 	end
 	
 	def [](deck)
