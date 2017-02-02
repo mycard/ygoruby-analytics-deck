@@ -179,7 +179,11 @@ class DeckIdentifier
 		# 移除被卡组类别拒绝的 Tags
 		# tags     -= decktype.refused_tags if decktype.is_a? DecTkType
 		# 提取名字
-		decktype_name = decktype.name if decktype.is_a? DeckType
+		if decktype.is_a? DeckType
+			decktype_name = decktype.name
+		else
+			decktype_name = decktype
+		end
 		tags_name     = tags.map { |tag| tag.name }
 		# 移除被拒类别
 		tags_name -= decktype.refused_tags.map { |tag| tag.name } if decktype.is_a? DeckType
