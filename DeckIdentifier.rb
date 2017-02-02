@@ -177,7 +177,7 @@ class DeckIdentifier
 		tags     = [] if tags == nil
 		tags     += global_tags
 		# 移除被卡组类别拒绝的 Tags
-		# tags     -= decktype.refused_tags if decktype.is_a? DeckType
+		# tags     -= decktype.refused_tags if decktype.is_a? DecTkType
 		# 提取名字
 		decktype_name = decktype.name if decktype.is_a? DeckType
 		tags_name     = tags.map { |tag| tag.name }
