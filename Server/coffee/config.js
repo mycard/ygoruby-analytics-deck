@@ -5,6 +5,7 @@
   };
 
   this.getServerURL = function(param) {
+    showTempNotification('sending server ' + param + '...');
     return config.server + '/' + param;
   };
 

@@ -111,14 +111,14 @@ end
 ## Git 操作
 Plugin.api.push 'post', '/analyze/deckIdentifier/git/pull' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'pulled from git.'
-	GitSyncer.pull
-	'fin'
+	answer = GitSyncer.pull
+	"fin\n" + answer
 end
 
 Plugin.api.push 'post', '/analyze/deckIdentifier/git/push' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'pushed to the git.'
-	GitSyncer.push
-	'fin'
+	answer = GitSyncer.push
+	"fin\n" + answer
 end
 
 # 静态页面

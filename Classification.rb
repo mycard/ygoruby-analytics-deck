@@ -7,6 +7,12 @@ class Classification
 	DefaultClassificationName = '神秘的类别'
 	DefaultPriority           = 0
 	
+	def initialize
+		@name = DefaultClassificationName
+		@priority = DefaultPriority
+		@restrain = []
+	end
+	
 	def load_json(json)
 		load_json_name json
 		load_json_priority json

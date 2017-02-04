@@ -27,11 +27,25 @@ class Tag < Classification
 	end
 	
 	def is_global?
+		return true if can_upgrade?
 		return @configs.include? 'global'
 	end
 	
 	def can_upgrade?
 		return @configs.include? 'upgrade'
+	end
+	
+	def is_appendix?
+		return @configs.include? 'appendix'
+	end
+	
+	def is_prefix?
+		return @configs.include? 'prefix'
+	end
+	
+	def is_separate
+		return true unless is_global?
+		return @configs.include? 'separate'
 	end
 
 	def to_hash

@@ -161,7 +161,9 @@ class DeckIdentifier
 			(priority - tag.priority <= 1) ? names.push(tag.name) : next
 		end
 		tags.replace tags - upgrade_tags
-		names.join ''
+		deck      = DeckType.new
+		deck.name = names.join ''
+		deck
 	end
 	
 	def recognize(deck)
@@ -174,19 +176,14 @@ class DeckIdentifier
 		# 若还是没有结果，谜
 		return [] if decktype == nil
 		# 联合
-		tags     = [] if tags == nil
-		tags     += global_tags
-		# 移除被卡组类别拒绝的 Tags
-		# tags     -= decktype.refused_tags if decktype.is_a? DecTkType
-		# 提取名字
-		if decktype.is_a? DeckType
-			decktype_name = decktype.name
-		else
-			decktype_name = decktype
-		end
+		tags          = [] if tags == nil
+		tags          += global_tags
+		tags          -= decktype.refused_tags
+		# 确定名字
+		decktype_name = decktype.get_name(tags)
 		tags_name     = tags.map { |tag| tag.name }
-		# 移除被拒类别
-		tags_name -= decktype.refused_tags.map { |tag| tag.name } if decktype.is_a? DeckType
+		# 保险
+		tags_name -= decktype.refused_tags.map { |tag| tag.name }
 		# 返回
 		logger.debug "deck is set #{decktype} [#{tags.join ', '}]"
 		[decktype_name, tags_name]

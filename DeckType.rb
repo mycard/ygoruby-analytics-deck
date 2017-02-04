@@ -5,6 +5,13 @@ class DeckType < Classification
 	attr_accessor :check_tags
 	attr_accessor :force_tags, :refused_tags
 	
+	def initialize
+		super
+		@check_tags = []
+		@force_tags = []
+		@refused_tags = []
+	end
+	
 	def load_json(json)
 		super
 		@check_tags = load_named_array(json, %w(check_tags tags)).map { |tag| Tag.from_json tag }
@@ -41,5 +48,16 @@ class DeckType < Classification
 	 
 	def to_s
 		"deck type [#{name}]"
+	end
+	
+	def get_name(tags)
+		basic_name = @name
+		remain_tags = tags.select do |tag|
+			basic_name = tag.name + basic_name if tag.is_prefix?
+			basic_name += tag.name if tag.is_appendix?
+			not (tag.is_prefix? or tag.is_appendix?)
+		end
+		tags.replace remain_tags
+		basic_name
 	end
 end
