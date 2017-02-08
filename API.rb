@@ -1,3 +1,4 @@
+require File.dirname(__FILE__) + '/../../Log.rb'
 require File.dirname(__FILE__) + '/../Plugin.rb'
 require File.dirname(__FILE__) + '/DeckIdentifier.rb'
 require File.dirname(__FILE__) + '/../../YgorubyBase/Deck.rb'
@@ -62,6 +63,7 @@ end
 
 Plugin.api.push 'post', '/analyze/deckIdentifier/test/load' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, ' requested to import production into test environment.'
+	test_environment.clear
 	test_environment.register_config
 	test_environment.finish
 	'loaded'
@@ -69,10 +71,11 @@ end
 
 Plugin.api.push 'post', '/analyze/deckIdentifier/test/reset' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'reset the test environment.'
+	base_logger.hang 'test' + params['accesskey'], :warn
 	test_environment.clear
 	test_environment.register_config
 	test_environment.finish
-	'reset'
+	"reset\n" + base_logger.resolve('test' + params['accesskey'])
 end
 
 
@@ -102,10 +105,11 @@ end
 
 Plugin.api.push 'post', '/analyze/deckIdentifier/restart' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'restarted the production server config.'
+	base_logger.hang 'production' + params['accesskey'], :warn
 	DeckIdentifier.global.clear
 	DeckIdentifier.global.register_config
 	DeckIdentifier.global.finish
-	'restart'
+	"restart\n" + base_logger.resolve('production' + params['accesskey'])
 end
 
 ## Git 操作

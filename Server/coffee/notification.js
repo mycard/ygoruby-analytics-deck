@@ -13,7 +13,25 @@
     hints.clear;
     return setTimeout(function() {
       return jqObj.alert('close');
-    }, 5000);
+    }, 10000);
+  };
+
+  this.showLineNotifications = function(mes) {
+    var line, lines;
+    lines = mes.split("\n");
+    showNotification(lines[0], 'info');
+    if ((function() {
+      var _i, _len, _ref, _results;
+      _ref = lines.slice(1);
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        line = _ref[_i];
+        _results.push(line !== "");
+      }
+      return _results;
+    })()) {
+      return showNotification(line, 'warning');
+    }
   };
 
   hints = [];

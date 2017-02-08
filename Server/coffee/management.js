@@ -103,7 +103,7 @@
       url: getServerURL('test/reset') + getAccessParameter(),
       method: 'post',
       success: function(data) {
-        return showNotification('server answer - 200 - ' + data, 'success');
+        return showLineNotifications('server answer - 200 - ' + data, 'success');
       },
       error: function(data) {
         return showNotification('server answer - ' + data.status + (" - " + data.responseText), 'danger');
@@ -148,7 +148,7 @@
       url: getServerURL('restart') + getAccessParameter(),
       method: 'post',
       success: function(data) {
-        return showNotification('server answer - 200 - ' + data, 'success');
+        return showLineNotifications('server answer - 200 - ' + data, 'success');
       },
       error: function(data) {
         return showNotification('server answer - ' + data.status + (" - " + data.responseText), 'danger');

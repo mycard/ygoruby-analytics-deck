@@ -82,7 +82,7 @@ testResetEnvironmentClicked = ->
     url: getServerURL('test/reset') + getAccessParameter()
     method: 'post'
     success: (data) ->
-      showNotification 'server answer - 200 - ' + data, 'success'
+      showLineNotifications 'server answer - 200 - ' + data, 'success'
     error: (data) ->
       showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
 
@@ -115,7 +115,7 @@ productRestartClicked = ->
     url: getServerURL('restart') + getAccessParameter()
     method: 'post'
     success: (data) ->
-      showNotification 'server answer - 200 - ' + data, 'success'
+      showLineNotifications 'server answer - 200 - ' + data, 'success'
     error: (data) ->
       showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
 
@@ -159,7 +159,6 @@ onInputFileChanged = (evt) ->
 
 @getMainContent = ->
   $('#txarea-main')[0].value
-
 @setMainContent = (value) ->
   $('#txarea-main')[0].value = value
 

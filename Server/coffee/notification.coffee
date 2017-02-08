@@ -5,7 +5,12 @@
   hints.clear
   setTimeout ->
     jqObj.alert('close')
-  , 5000
+  , 10000
+
+@showLineNotifications = (mes) ->
+  lines = mes.split "\n"
+  showNotification lines[0], 'info'
+  showNotification line, 'warning' if line != "" for line in lines[1..-1]
 
 hints = []
 @showTempNotification = (mes) ->

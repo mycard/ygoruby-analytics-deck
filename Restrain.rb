@@ -160,7 +160,8 @@ class RestrainCardSet < Restrain
 	end
 	
 	def self.search_set_by_name(name)
-		return CardSet[name]
+		# 你为什么要这么懒
+		return CardSets[$environment_name][name]
 	end
 	
 	def [](deck)

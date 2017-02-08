@@ -10,9 +10,11 @@ class DeckIdentifier
 		@global_tags      = []
 		@decks            = []
 		@environment_name = name
+		CardSets[name] = CardSets.new if name != 'global'
 	end
 	
 	def classificationize(obj)
+		$environment_name = @environment_name
 		if obj.is_a? Array
 			obj.map { |child| classificationize child }
 		elsif obj.is_a? Hash
@@ -26,7 +28,10 @@ class DeckIdentifier
 			elsif type == 'tag'
 				Tag.from_json obj
 			elsif type == 'set'
-				CardSet.from_hash obj
+				set = CardSets[@environment_name].create_set obj
+				# 迁就
+				CardSets[@environment_name].define_set set
+				set
 			else
 				logger.warn "can't recognize type #{type}"
 				nil
@@ -51,7 +56,8 @@ class DeckIdentifier
 				@global_tags.push obj
 			end
 		elsif obj.is_a? CardSet
-			# skip
+			# 迁就
+			# CardSets[@environment_name].define_set obj
 		end
 	end
 	
@@ -117,6 +123,7 @@ class DeckIdentifier
 		@tags.clear
 		@global_tags.clear
 		@decks.clear
+		CardSets[@environment_name].clear_extra
 	end
 	
 	def generate_tag_hash
