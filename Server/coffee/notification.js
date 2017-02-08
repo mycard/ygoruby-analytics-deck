@@ -17,21 +17,17 @@
   };
 
   this.showLineNotifications = function(mes) {
-    var line, lines;
+    var line, lines, _i, _len, _ref;
     lines = mes.split("\n");
     showNotification(lines[0], 'info');
-    if ((function() {
-      var _i, _len, _ref, _results;
-      _ref = lines.slice(1);
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        line = _ref[_i];
-        _results.push(line !== "");
+    _ref = lines.slice(1);
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      line = _ref[_i];
+      if (line !== "") {
+        showNotification(line, 'warning');
       }
-      return _results;
-    })()) {
-      return showNotification(line, 'warning');
     }
+    return '';
   };
 
   hints = [];

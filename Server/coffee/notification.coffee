@@ -10,7 +10,9 @@
 @showLineNotifications = (mes) ->
   lines = mes.split "\n"
   showNotification lines[0], 'info'
-  showNotification line, 'warning' if line != "" for line in lines[1..-1]
+  for line in lines[1..-1]
+    showNotification line, 'warning' if line != ""
+  ''
 
 hints = []
 @showTempNotification = (mes) ->
