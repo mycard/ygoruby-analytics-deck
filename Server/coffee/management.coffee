@@ -9,6 +9,7 @@ this.initManageBoard = ->
   initTestButtons()
   initGitButtons()
   initFileInputs()
+  initSearchBoxes()
 
 initEnvironmentDropdown = ->
   $('#btn-environment-choose-test').on 'click', switchEnvironmentTest
@@ -32,6 +33,10 @@ initGitButtons = ->
 initFileInputs = ->
   document.getElementById('manage-input-file').addEventListener 'change', onInputFileChanged
 
+initSearchBoxes = ->
+  document.getElementById('tbox-search-generation').onchange = ->
+    setGenerationHTML document.getElementById('tbox-search-generation').value
+
 switchEnvironmentTest = ->
   data.mode = 'test'
   $('#dropdown-environment')[0].childNodes[0].nodeValue = '测试 '
@@ -41,7 +46,7 @@ switchEnvironmentTest = ->
   $('#dropdown-environment').addClass 'btn-warning'
   $('#panel-test-board').show()
   $('#panel-product-board').hide()
-  $('#panel-git-board').hide()
+  #$('#panel-git-board').hide()
 
 switchEnvironmentProduct = ->
   data.mode = 'product'
@@ -51,12 +56,12 @@ switchEnvironmentProduct = ->
   $('#dropdown-environment').removeClass 'btn-warning'
   $('#dropdown-environment').addClass 'btn-danger'
   $('#panel-product-board').show()
-  $('#panel-git-board').show()
+  #$('#panel-git-board').show()
   $('#panel-test-board').hide()
 
 testCompileFileClicked = ->
   $.ajax
-    url: getServerURL('test/compiler/heavy') + getAccessParameter()
+    url: getServerURL('test/compiler/full') + getAccessParameter()
     method: 'post'
     data: getMainContent()
     success: (data) ->

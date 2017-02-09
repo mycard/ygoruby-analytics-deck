@@ -147,7 +147,7 @@ class DeckIdentifierCompiler
 	end
 	
 	def guess_line_type(line)
-		check_line = line
+		check_line = line.clone
 		# 是不是一条以 ！开头的约束？
 		if check_line.start_with? Constants::RestrainIdentifier
 			line.replace line[1..-1].strip

@@ -10,6 +10,9 @@ this.classificationSetHTML  = (classification)->
     decktypeSetTypeName()
   else if type == 'tag'
     tagSetTypeName()
+  else if type == 'card set'
+    setSetTypeName()
+    setCardsSetHTML classification
 
 classificationSetNameHTML = (name) ->
   $("div#deck-name").html name
@@ -18,13 +21,24 @@ classificationSetPriorityHTML = (id) ->
   $("div#deck-prioirity").html id
 
 classificationRestrainSetHTML = (restrains) ->
+  return if !restrains
   $("ul#preview-restrains").empty()
   if !(restrains instanceof Array)
     restrains = [restrains]
   for restrain in restrains
-    restrain_gotten_html = @restrainHTML restrain
+    if restrain instanceof Array
+      # 约束组
+      restrain_gotten_html = @restrainGroupHTML restrain
+    else
+      restrain_gotten_html = @restrainHTML restrain
     $("ul#preview-restrains").append restrain_gotten_html[0]
     $("ul#preview-restrains").append restrain_gotten_html[1]
+
+setCardsSetHTML = (set_json) ->
+  return if !set_json
+  set_gotten_html = setHTML set_json
+  $("ul#preview-restrains").append set_gotten_html[0]
+  $("ul#preview-restrains").append set_gotten_html[1]
 
 classificationSetExtraMessageHTML = (classification) ->
   type = classification.type
@@ -54,6 +68,7 @@ classificationAddExtraMessage = (message) ->
 
 decktypeSetTypeName = ->
   $("div#type-name").html "卡组"
+  $("div#lbl-restrain").html "约束"
 
 decktypeSetExtraMessageName = ->
   $("div#preview-extra-message-name").html "标签"
@@ -63,9 +78,14 @@ decktypeSetExtraMessageHTML = (decktype) ->
 
 tagSetTypeName = ->
   $("div#type-name").html "标签"
+  $("div#lbl-restrain").html "约束"
 
 tagSetExtraMessageName = ->
   $("div#preview-extra-message-name").html "参数"
+
+setSetTypeName = ->
+  $("div#type-name").html "字段"
+  $("div#lbl-restrain").html "集合"
 
 tagSetExtraMessageHTML = (tag) ->
   classificationSetExtraMessageContentHTML tag.configs

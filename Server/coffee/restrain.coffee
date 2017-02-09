@@ -6,8 +6,30 @@ this.restrainHTML = (restrain_json) ->
     restrainFigureHTML(restrain_json)
   ]
 
+this.restrainGroupHTML = (restrain_group_json) ->
+  [
+    "",
+    restrainGroupHTML restrain_group_json
+  ]
+
+this.setHTML = (set_json) ->
+  [
+    setExampleHTML(set_json),
+    setFigureHTML(set_json)
+  ]
+
 restrainExampleHTML = (restrain_json)->
+  return if !restrain_json
   ids = restrainIds restrain_json
+  a = $ "<a></a>"
+  a.addClass "list-group-item"
+  for id in ids
+    a.append restrainImgHTML id
+  a
+
+setExampleHTML = (set_json) ->
+  return if !set_json
+  ids = set_json.ids
   a = $ "<a></a>"
   a.addClass "list-group-item"
   for id in ids
@@ -18,6 +40,7 @@ restrainImgHTML = (id) ->
   "<img src='http://cdn233.my-card.in/ygopro/pics/thumbnail/#{id}.jpg'>"
 
 restrainIds = (restrain_json) ->
+  return if !restrain_json
   type = restrain_json.type
   if type == 'card'
     return Array(restrain_json.condition.number).fill restrain_json.id
@@ -37,6 +60,18 @@ restrainFigureHTML = (restrain_json) ->
   a.append restrainTypeHTML restrain_json
   a.append restrainRangeHTML restrain_json.range
   a.append restrainConditionHTML restrain_json.condition, restrain_json.type
+  a
+  
+restrainGroupHTML = (restrain_group_html) ->
+  a = $ "<a>迷之约束组 - 今天的 II 也懒的不行</a>"
+  a.addClass "list-group-item disabled"
+  a
+
+setFigureHTML = (set_json) ->
+  a = $ "<a></a>"
+  a.addClass "list-group-item disabled"
+  a.append restrainRangeHTML set_json.ids.length
+  a.append " cards"
   a
 
 restrainConditionHTML = (condition_json, type)->

@@ -38,6 +38,18 @@ Plugin.api.push 'post', '/analyze/deckIdentifier/test/compiler/heavy' do
 	content.to_json
 end
 
+Plugin.api.push 'post', '/analyze/deckIdentifier/test/compiler/full' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, ' compiled a string file and added it.'
+	def_str = request.body.read
+	def_str.force_encoding 'utf-8'
+	obj     = DeckIdentifierCompiler.new.compile_str def_str
+	content = test_environment.classificationize obj
+	test_environment.register content
+	test_environment.finish
+	content_type 'application/json'
+	content.to_json
+end
+
 Plugin.api.push 'post', '/analyze/deckIdentifier/test' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, ' posted a string file into the test environment.'
 	json    = request.body.read
