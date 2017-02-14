@@ -41,8 +41,8 @@
   initRecordButtons = function() {
     $('#btn-next-record').on('click', recordNextClicked);
     $('#btn-download-record').on('download', recordDownloadClicked);
-    $('#btn-record-reset').on('reset', recordResetClicked);
-    return $('#btn-record-clear').on('reset', recordClearClicked);
+    $('#btn-record-reset').on('click', recordResetClicked);
+    return $('#btn-record-clear').on('click', recordClearClicked);
   };
 
   initGitButtons = function() {

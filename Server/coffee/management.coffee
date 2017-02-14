@@ -31,8 +31,8 @@ initProductButtons = ->
 initRecordButtons = ->
   $('#btn-next-record').on 'click', recordNextClicked
   $('#btn-download-record').on 'download', recordDownloadClicked
-  $('#btn-record-reset').on 'reset', recordResetClicked
-  $('#btn-record-clear').on 'reset', recordClearClicked
+  $('#btn-record-reset').on 'click', recordResetClicked
+  $('#btn-record-clear').on 'click', recordClearClicked
 
 initGitButtons = ->
   $('#btn-pull-git').on 'click', gitPullClicked
