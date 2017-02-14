@@ -156,8 +156,12 @@ recordNextClicked = ->
   $.ajax
     url: getServerURL('record/next') + getAccessParameter()
     success: (data) ->
-      showLineNotifications 'server answer - 200 - ' + (data.responseText == '' ? '0 deck' : '1 deck'), 'success'
-      setInputDeck data.response
+      if data.responseText == ''
+        deckAnswer = '0 deck'
+      else
+        deckAnswer = '1 deck'
+      showLineNotifications 'server answer - 200 - ' + deckAnswer, 'success'
+      setInputDeck data
     error: (data) ->
       showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
 
@@ -217,6 +221,7 @@ onInputFileChanged = (evt) ->
       switchToText()
 
 setInputDeck = (response) ->
+  console.log response
   $('#dropdown-editing-file')[0].childNodes[0].textContent = '记录 ' + response.name
   setMainContent response.content
   switchToDeck response.content

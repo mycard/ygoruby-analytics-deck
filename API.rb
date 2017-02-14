@@ -109,7 +109,7 @@ Plugin.api.push 'post', '/analyze/deckIdentifier/product' do
 	'posted'
 end
 
-Plugin.api.push 'delete', '/deckIdentifier/product' do
+Plugin.api.push 'delete', '/analyze/deckIdentifier/product' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'removed the file ' + params['filename']
 	DeckIdentifier.remove_config_file params['filename']
 	'removed'

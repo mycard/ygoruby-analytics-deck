@@ -194,11 +194,14 @@
     return $.ajax({
       url: getServerURL('record/next') + getAccessParameter(),
       success: function(data) {
-        var _ref;
-        showLineNotifications('server answer - 200 - ' + ((_ref = data.responseText === '') != null ? _ref : {
-          '0 deck': '1 deck'
-        }), 'success');
-        return setInputDeck(data.response);
+        var deckAnswer;
+        if (data.responseText === '') {
+          deckAnswer = '0 deck';
+        } else {
+          deckAnswer = '1 deck';
+        }
+        showLineNotifications('server answer - 200 - ' + deckAnswer, 'success');
+        return setInputDeck(data);
       },
       error: function(data) {
         return showNotification('server answer - ' + data.status + (" - " + data.responseText), 'danger');
@@ -284,6 +287,7 @@
   };
 
   setInputDeck = function(response) {
+    console.log(response);
     $('#dropdown-editing-file')[0].childNodes[0].textContent = '记录 ' + response.name;
     setMainContent(response.content);
     return switchToDeck(response.content);
