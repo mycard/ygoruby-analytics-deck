@@ -155,7 +155,6 @@ productRestartClicked = ->
 recordNextClicked = ->
   $.ajax
     url: getServerURL('record/next') + getAccessParameter()
-    method: 'post'
     success: (data) ->
       showLineNotifications 'server answer - 200 - ' + data.responseText == '' ? '0 deck' : '1 deck', 'success'
       setInputDeck data.response
@@ -167,7 +166,6 @@ recordDownloadClicked = ->
 recordResetClicked = ->
   $.ajax
     url: getServerURL('record/reset') + getAccessParameter()
-    method: 'post'
     success: (data) ->
       showLineNotifications 'server answer - 200 - ' + data, 'success'
     error: (data) ->
@@ -176,7 +174,6 @@ recordResetClicked = ->
 recordClearClicked = ->
   $.ajax
     url: getServerURL('record/clear') + getAccessParameter()
-    method: 'post'
     success: (data) ->
       showLineNotifications 'server answer - 200 - ' + data, 'success'
     error: (data) ->

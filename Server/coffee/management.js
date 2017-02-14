@@ -193,7 +193,6 @@
   recordNextClicked = function() {
     return $.ajax({
       url: getServerURL('record/next') + getAccessParameter(),
-      method: 'post',
       success: function(data) {
         var _ref;
         showLineNotifications((_ref = 'server answer - 200 - ' + data.responseText === '') != null ? _ref : {
@@ -212,7 +211,6 @@
   recordResetClicked = function() {
     return $.ajax({
       url: getServerURL('record/reset') + getAccessParameter(),
-      method: 'post',
       success: function(data) {
         return showLineNotifications('server answer - 200 - ' + data, 'success');
       },
@@ -225,7 +223,6 @@
   recordClearClicked = function() {
     return $.ajax({
       url: getServerURL('record/clear') + getAccessParameter(),
-      method: 'post',
       success: function(data) {
         return showLineNotifications('server answer - 200 - ' + data, 'success');
       },
