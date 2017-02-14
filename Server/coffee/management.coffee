@@ -156,7 +156,7 @@ recordNextClicked = ->
   $.ajax
     url: getServerURL('record/next') + getAccessParameter()
     success: (data) ->
-      if data.responseText == ''
+      if data.responseText == '' or data.responseText == undefined or data == undefined
         deckAnswer = '0 deck'
       else
         deckAnswer = '1 deck'

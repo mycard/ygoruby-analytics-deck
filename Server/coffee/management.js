@@ -195,7 +195,7 @@
       url: getServerURL('record/next') + getAccessParameter(),
       success: function(data) {
         var deckAnswer;
-        if (data.responseText === '') {
+        if (data.responseText === '' || data.responseText === void 0 || data === void 0) {
           deckAnswer = '0 deck';
         } else {
           deckAnswer = '1 deck';
