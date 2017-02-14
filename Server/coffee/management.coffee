@@ -173,7 +173,7 @@ recordResetClicked = ->
     error: (data) ->
       showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
 
-recordResetClicked = ->
+recordClearClicked = ->
   $.ajax
     url: getServerURL('record/clear') + getAccessParameter()
     method: 'post'
