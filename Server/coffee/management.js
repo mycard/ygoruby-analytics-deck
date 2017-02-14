@@ -195,9 +195,9 @@
       url: getServerURL('record/next') + getAccessParameter(),
       success: function(data) {
         var _ref;
-        showLineNotifications((_ref = 'server answer - 200 - ' + data.responseText === '') != null ? _ref : {
+        showLineNotifications('server answer - 200 - ' + ((_ref = data.responseText === '') != null ? _ref : {
           '0 deck': '1 deck'
-        }, 'success');
+        }), 'success');
         return setInputDeck(data.response);
       },
       error: function(data) {

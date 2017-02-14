@@ -156,7 +156,7 @@ recordNextClicked = ->
   $.ajax
     url: getServerURL('record/next') + getAccessParameter()
     success: (data) ->
-      showLineNotifications 'server answer - 200 - ' + data.responseText == '' ? '0 deck' : '1 deck', 'success'
+      showLineNotifications 'server answer - 200 - ' + (data.responseText == '' ? '0 deck' : '1 deck'), 'success'
       setInputDeck data.response
     error: (data) ->
       showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
