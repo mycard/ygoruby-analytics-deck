@@ -9,6 +9,10 @@
     return config.server + '/' + param;
   };
 
+  this.cardImgHTML = function(id) {
+    return "<img src='http://ygo233.my-card.in/ygopro/pics/thumbnail/" + id + ".jpg'>";
+  };
+
 }).call(this);
 
 //# sourceMappingURL=config.js.map

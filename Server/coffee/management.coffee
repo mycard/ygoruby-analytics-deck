@@ -7,6 +7,7 @@ this.initManageBoard = ->
   switchEnvironmentTest()
   initProductButtons()
   initTestButtons()
+  initRecordButtons()
   initGitButtons()
   initFileInputs()
   initSearchBoxes()
@@ -14,6 +15,7 @@ this.initManageBoard = ->
 initEnvironmentDropdown = ->
   $('#btn-environment-choose-test').on 'click', switchEnvironmentTest
   $('#btn-environment-choose-product').on 'click', switchEnvironmentProduct
+  $('#btn-environment-choose-record').on 'click', switchEnvironmentRecord
 
 initTestButtons = ->
   $('#btn-compile-file').on 'click', testCompileFileClicked
@@ -25,6 +27,12 @@ initProductButtons = ->
   $('#btn-push-file').on 'click', productPushFileClicked
   $('#btn-delete-file').on 'click', productRemoveFileClicked
   $('#btn-restart-service').on 'click', productRestartClicked
+
+initRecordButtons = ->
+  $('btn-next-record').on 'click', recordNextClicked
+  $('btn-download-record').on 'download', recordDownloadClicked
+  $('btn-record-reset').on 'reset', recordResetClicked
+  $('btn-record-clear').on 'reset', recordClearClicked
 
 initGitButtons = ->
   $('#btn-pull-git').on 'click', gitPullClicked
@@ -41,23 +49,43 @@ switchEnvironmentTest = ->
   data.mode = 'test'
   $('#dropdown-environment')[0].childNodes[0].nodeValue = '测试 '
   $('#panel-management').removeClass 'panel-danger'
+  $('#panel-management').removeClass 'panel-info'
   $('#panel-management').addClass 'panel-warning'
   $('#dropdown-environment').removeClass 'btn-danger'
+  $('#dropdown-environment').removeClass 'btn-info'
   $('#dropdown-environment').addClass 'btn-warning'
   $('#panel-test-board').show()
   $('#panel-product-board').hide()
+  $('#panel-record-board').hide()
   #$('#panel-git-board').hide()
 
 switchEnvironmentProduct = ->
   data.mode = 'product'
   $('#dropdown-environment')[0].childNodes[0].nodeValue = '生产 '
   $('#panel-management').removeClass 'panel-warning'
+  $('#panel-management').removeClass 'panel-info'
   $('#panel-management').addClass 'panel-danger'
   $('#dropdown-environment').removeClass 'btn-warning'
+  $('#dropdown-environment').removeClass 'btn-info'
   $('#dropdown-environment').addClass 'btn-danger'
   $('#panel-product-board').show()
   #$('#panel-git-board').show()
   $('#panel-test-board').hide()
+  $('#panel-record-board').hide()
+
+switchEnvironmentRecord = ->
+  data.mode = 'record'
+  $('#dropdown-environment')[0].childNodes[0].nodeValue = '记录 '
+  $('#panel-management').removeClass 'panel-warning'
+  $('#panel-management').removeClass 'panel-danger'
+  $('#panel-management').addClass 'panel-info'
+  $('#dropdown-environment').removeClass 'btn-warning'
+  $('#dropdown-environment').removeClass 'btn-danger'
+  $('#dropdown-environment').addClass 'btn-info'
+  $('#panel-product-board').hide()
+  $('#panel-test-board').hide()
+  $('#panel-record-board').show()
+
 
 testCompileFileClicked = ->
   $.ajax
@@ -124,6 +152,37 @@ productRestartClicked = ->
     error: (data) ->
       showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
 
+recordNextClicked = ->
+  $.ajax
+    url: getServerURL('record/next') + getAccessParameter()
+    method: 'post'
+    success: (data) ->
+      showLineNotifications 'server answer - 200 - ' + data.responseText == '' ? '0 deck' : '1 deck', 'success'
+      setInputDeck data.response
+    error: (data) ->
+      showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
+
+recordDownloadClicked = ->
+
+recordResetClicked = ->
+  $.ajax
+    url: getServerURL('record/reset') + getAccessParameter()
+    method: 'post'
+    success: (data) ->
+      showLineNotifications 'server answer - 200 - ' + data, 'success'
+    error: (data) ->
+      showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
+
+recordResetClicked = ->
+  $.ajax
+    url: getServerURL('record/clear') + getAccessParameter()
+    method: 'post'
+    success: (data) ->
+      showLineNotifications 'server answer - 200 - ' + data, 'success'
+    error: (data) ->
+      showNotification 'server answer - ' + data.status + " - #{data.responseText}", 'danger'
+
+
 gitPullClicked = ->
   $.ajax
     url: getServerURL('git/pull') + getAccessParameter()
@@ -150,11 +209,29 @@ onInputFileChanged = (evt) ->
   # read file
   reader = new FileReader()
   setMainContent ''
-  reader.onload = (e) ->
-    $('#txarea-main')[0].value = e.target.result + $('#txarea-main')[0].value
   reader.readAsText file
   $('#dropdown-editing-file')[0].childNodes[0].textContent = '本地文件 ' + file.name
   data.file = file
+  reader.onload = (e) ->
+    $('#txarea-main')[0].value = e.target.result + $('#txarea-main')[0].value
+    if file.name.endsWith ".ydk"
+      switchToDeck deckStr
+    else
+      switchToText()
+
+setInputDeck = (response) ->
+  $('#dropdown-editing-file')[0].childNodes[0].textContent = '记录 ' + response.name
+  setMainContent response.content
+  switchToDeck response.content
+
+switchToDeck = (deckStr) ->
+  $('#div-deck').html generateDeckHTML generateDeck deckStr
+  $('#div-deck').show()
+  $('.form-group').hide()
+  
+switchToText = ->
+  $('#div-deck').hide()
+  $('.form-group').show()
 
 @getAccessKey = ->
   $('#input-password')[0].value

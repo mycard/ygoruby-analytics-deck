@@ -37,7 +37,7 @@ setExampleHTML = (set_json) ->
   a
 
 restrainImgHTML = (id) ->
-  "<img src='http://cdn233.my-card.in/ygopro/pics/thumbnail/#{id}.jpg'>"
+  cardImgHTML id
 
 restrainIds = (restrain_json) ->
   return if !restrain_json

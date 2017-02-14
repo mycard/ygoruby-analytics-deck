@@ -124,6 +124,36 @@ Plugin.api.push 'post', '/analyze/deckIdentifier/restart' do
 	"restart\n" + base_logger.resolve('production' + params['accesskey'])
 end
 
+## 记录管理
+$mysterious_records = nil
+Plugin.api.push 'get', '/analyze/deckIdentifier/record/next' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'checked next record.'
+	$mysterious_records = Dir.glob 'mysterious_decks/*.ydk' if $mysterious_records == nil
+	deck_path = $mysterious_records.pop
+	if deck_path == nil
+		''
+	else
+		content = File.open(deck_path) { |f| f.read }
+		File.delete deck_path
+		content_type 'application/json'
+		{ name:deck_path, content: content }.to_json
+	end
+end
+
+Plugin.api.push 'get', '/analyze/deckIdentifier/record/reset' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'reset the record pointer.'
+	$mysterious_records = nil
+	'reset the record pointer.'
+end
+
+Plugin.api.push 'get', '/analyze/deckIdentifier/record/clear' do
+	DeckIdentifier.quick_access_key params['accesskey'], self, 'clear the record dir.'
+	$mysterious_records = nil
+	list = Dir.glob('mysterious_decks/*.ydk')
+	list.each { |file| File.delete file }
+	"removed #{list.count} records"
+end
+
 ## Git 操作
 Plugin.api.push 'post', '/analyze/deckIdentifier/git/pull' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'pulled from git.'

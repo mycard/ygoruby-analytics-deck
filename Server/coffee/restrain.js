@@ -45,7 +45,7 @@
   };
 
   restrainImgHTML = function(id) {
-    return "<img src='http://cdn233.my-card.in/ygopro/pics/thumbnail/" + id + ".jpg'>";
+    return cardImgHTML(id);
   };
 
   restrainIds = function(restrain_json) {
