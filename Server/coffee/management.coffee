@@ -29,10 +29,10 @@ initProductButtons = ->
   $('#btn-restart-service').on 'click', productRestartClicked
 
 initRecordButtons = ->
-  $('btn-next-record').on 'click', recordNextClicked
-  $('btn-download-record').on 'download', recordDownloadClicked
-  $('btn-record-reset').on 'reset', recordResetClicked
-  $('btn-record-clear').on 'reset', recordClearClicked
+  $('#btn-next-record').on 'click', recordNextClicked
+  $('#btn-download-record').on 'download', recordDownloadClicked
+  $('#btn-record-reset').on 'reset', recordResetClicked
+  $('#btn-record-clear').on 'reset', recordClearClicked
 
 initGitButtons = ->
   $('#btn-pull-git').on 'click', gitPullClicked
@@ -215,7 +215,7 @@ onInputFileChanged = (evt) ->
   reader.onload = (e) ->
     $('#txarea-main')[0].value = e.target.result + $('#txarea-main')[0].value
     if file.name.endsWith ".ydk"
-      switchToDeck deckStr
+      switchToDeck e.target.result
     else
       switchToText()
 

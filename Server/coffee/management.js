@@ -39,10 +39,10 @@
   };
 
   initRecordButtons = function() {
-    $('btn-next-record').on('click', recordNextClicked);
-    $('btn-download-record').on('download', recordDownloadClicked);
-    $('btn-record-reset').on('reset', recordResetClicked);
-    return $('btn-record-clear').on('reset', recordClearClicked);
+    $('#btn-next-record').on('click', recordNextClicked);
+    $('#btn-download-record').on('download', recordDownloadClicked);
+    $('#btn-record-reset').on('reset', recordResetClicked);
+    return $('#btn-record-clear').on('reset', recordClearClicked);
   };
 
   initGitButtons = function() {
@@ -279,7 +279,7 @@
     return reader.onload = function(e) {
       $('#txarea-main')[0].value = e.target.result + $('#txarea-main')[0].value;
       if (file.name.endsWith(".ydk")) {
-        return switchToDeck(deckStr);
+        return switchToDeck(e.target.result);
       } else {
         return switchToText();
       }
