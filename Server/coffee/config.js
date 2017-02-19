@@ -10,7 +10,7 @@
   };
 
   this.cardImgHTML = function(id) {
-    return "<img src='http://ygo233.my-card.in/ygopro/pics/thumbnail/" + id + ".jpg'>";
+    return "<a href='http://www.ourocg.cn/S.aspx?key=" + id + "' target='_blank'><img src='http://ygo233.my-card.in/ygopro/pics/thumbnail/" + id + ".jpg'</a>";
   };
 
 }).call(this);

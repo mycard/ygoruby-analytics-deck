@@ -7,4 +7,4 @@ this.getServerURL = (param) ->
   config.server + '/' + param
 
 this.cardImgHTML = (id) ->
-  "<img src='http://ygo233.my-card.in/ygopro/pics/thumbnail/#{id}.jpg'>"
+  "<a href='http://www.ourocg.cn/S.aspx?key=#{id}' target='_blank'><img src='http://ygo233.my-card.in/ygopro/pics/thumbnail/#{id}.jpg'</a>"
