@@ -114,6 +114,8 @@
     var name, type;
     type = restrain_json.type;
     name = restrain_json.name['zh-CN'];
+    if(!name)
+      name = restrain_json.name;
     return "<kbd class='" + type + "'>" + name + "</kbd>";
   };
 

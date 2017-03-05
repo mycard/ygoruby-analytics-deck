@@ -88,6 +88,7 @@ restrainRangeHTML = (range_json)->
 restrainTypeHTML = (restrain_json) ->
   type = restrain_json.type
   name = restrain_json.name['zh-CN']
+  name = restrain_json.name unless name
   "<kbd class='#{type}'>#{name}</kbd>"
 
 ###

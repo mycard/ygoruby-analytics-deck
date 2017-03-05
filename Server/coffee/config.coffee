@@ -1,5 +1,5 @@
 this.config = {
-  "server": "/ygopro/analytics2/deckIdentifier"
+  "server": "/ygopro/analytics/deckIdentifier"
 }
 
 this.getServerURL = (param) ->
