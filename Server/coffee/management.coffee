@@ -11,6 +11,7 @@ this.initManageBoard = ->
   initGitButtons()
   initFileInputs()
   initSearchBoxes()
+  initSwitchButton()
 
 initEnvironmentDropdown = ->
   $('#btn-environment-choose-test').on 'click', switchEnvironmentTest
@@ -44,6 +45,12 @@ initFileInputs = ->
 initSearchBoxes = ->
   document.getElementById('tbox-search-generation').onchange = ->
     setGenerationHTML document.getElementById('tbox-search-generation').value
+
+initSwitchButton = ->
+  $('#button-switch-deck').hide()
+  $('#button-switch-deck').click ->
+    $('#button-switch-deck').hide()
+    switchToText()
 
 switchEnvironmentTest = ->
   data.mode = 'test'
@@ -230,6 +237,7 @@ switchToDeck = (deckStr) ->
   $('#div-deck').html generateDeckHTML generateDeck deckStr
   $('#div-deck').show()
   $('.form-group').hide()
+  $('#button-switch-deck').show()
   
 switchToText = ->
   $('#div-deck').hide()

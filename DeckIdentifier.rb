@@ -144,7 +144,10 @@ class DeckIdentifier
 		tag_array.each_with_index do |tag, index|
 			next unless tag.is_raw?
 			tag_array[index] = @tag_hash[tag.name]
-			logger.warn "not found named tag #{tag.name}" if tag_array[index] == nil
+			if tag_array[index] == nil
+				logger.warn "not found named tag #{tag.name}"
+
+			end
 		end
 		tag_array.replace tag_array.select { |tag| tag != nil }
 	end
