@@ -123,6 +123,7 @@ class DeckIdentifier
 		@tags.clear
 		@global_tags.clear
 		@decks.clear
+		@tag_hash = nil
 		CardSets[@environment_name].clear_extra
 	end
 	
@@ -146,7 +147,6 @@ class DeckIdentifier
 			tag_array[index] = @tag_hash[tag.name]
 			if tag_array[index] == nil
 				logger.warn "not found named tag #{tag.name}"
-
 			end
 		end
 		tag_array.replace tag_array.select { |tag| tag != nil }
