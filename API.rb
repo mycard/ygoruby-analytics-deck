@@ -136,7 +136,7 @@ Plugin.api.push 'get', '/analyze/deckIdentifier/record/next' do
 		content = File.open(deck_path) { |f| f.read }
 		File.delete deck_path
 		content_type 'application/json'
-		{ name: deck_path, content: content }.to_json
+		{ name: deck_path, content: content, remain: $mysterious_records.count }.to_json
 	end
 end
 
