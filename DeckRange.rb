@@ -3,6 +3,7 @@ class DeckRange
 	# main 主牌
 	# side 备牌
 	# ex 额外
+    # ori 主牌与额外
 	# all 所有
 	attr_accessor :range
 
@@ -18,6 +19,8 @@ class DeckRange
 				return deck.side_classified
 			when 'ex'
 				return deck.ex_classified
+			when 'ori'
+				return deck.ori_classified
 			when 'all'
 				return deck.cards_classified
 			else
@@ -33,6 +36,8 @@ class DeckRange
 				return deck.side
 			when 'ex'
 				return deck.ex
+			when 'ori'
+				return deck.main + deck.ex
 			when 'all'
 				return deck.main + deck.side + deck.ex
 			else

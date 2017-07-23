@@ -15,7 +15,7 @@ class DeckIdentifierCompiler
 		SetIdentifierReg      = Regexp.new SetIdentifier
 		TagIdentifierReg      = Regexp.new TagIdentifier
 		PriorityIdentifierReg = Regexp.new '\[(\d+?)\]'
-		RestrainReg           =/(.+?)(\s+?)(main|side|ex|all){0,1}(\s*?)(>|<|=)(=*)(\s*?)([0-9]+)/i
+		RestrainReg           =/(.+?)(\s+?)(main|side|ex|ori|all){0,1}(\s*?)(>|<|=)(=*)(\s*?)([0-9]+)/i
 	end
 	
 	def initialize
