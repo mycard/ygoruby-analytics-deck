@@ -5,9 +5,7 @@ require File.dirname(__FILE__) + '/../../YgorubyBase/Deck.rb'
 require File.dirname(__FILE__) + '/Compiler.rb'
 require File.dirname(__FILE__) + '/GitSyncer.rb'
 
-def base_logger
-	return logger
-end
+base_logger = logger()
 
 Plugin.api.push 'get', '/analyze/deckIdentifier/json' do
 	json    = request.body.read
@@ -88,8 +86,8 @@ end
 Plugin.api.push 'post', '/analyze/deckIdentifier/test/reset' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'reset the test environment.'
   messages = ''
-	base_logger.register_trigger 'test' + params['accesskey'] do |message, line|
-    messages += line
+	base_logger.register_trigger 'test' + params['accesskey'] do |msg, line, level|
+    messages += msg + "\n" if level == :warn
   end
 	test_environment.clear
 	test_environment.register_config
@@ -126,8 +124,8 @@ end
 Plugin.api.push 'post', '/analyze/deckIdentifier/restart' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'restarted the production server config.'
   messages = ""
-	base_logger.register_trigger 'production' + params['accesskey'] do |msg, line|
-    messages += line
+	base_logger.register_trigger 'production' + params['accesskey'] do |msg, line, level|
+    messages += msg + "\n" if level == :warn
   end
 	DeckIdentifier.global.clear
 	DeckIdentifier.global.register_config
