@@ -83,11 +83,15 @@ end
 
 Plugin.api.push 'post', '/analyze/deckIdentifier/test/reset' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'reset the test environment.'
-	base_logger.hang 'test' + params['accesskey'], :warn
+  messages = ''
+	logger.register_trigger 'test' + params['accesskey'] do |message, line|
+    messages += line
+  end
 	test_environment.clear
 	test_environment.register_config
 	test_environment.finish
-	"reset\n" + base_logger.resolve('test' + params['accesskey'])
+  logger.unregister_trigger 'test' + params['accesskey']
+	"reset\n" + messages
 end
 
 
@@ -117,11 +121,15 @@ end
 
 Plugin.api.push 'post', '/analyze/deckIdentifier/restart' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'restarted the production server config.'
-	base_logger.hang 'production' + params['accesskey'], :warn
+  messages = ""
+	logger.register_trigger 'production' + params['accesskey'] do |msg, line|
+    messages += line
+  end
 	DeckIdentifier.global.clear
 	DeckIdentifier.global.register_config
 	DeckIdentifier.global.finish
-	"restart\n" + base_logger.resolve('production' + params['accesskey'])
+  logger.unregister_trigger 'production' + params['accesskey']
+	"restart\n" + messages
 end
 
 ## 记录管理
