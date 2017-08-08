@@ -5,6 +5,10 @@ require File.dirname(__FILE__) + '/../../YgorubyBase/Deck.rb'
 require File.dirname(__FILE__) + '/Compiler.rb'
 require File.dirname(__FILE__) + '/GitSyncer.rb'
 
+def base_logger
+	return logger
+end
+
 Plugin.api.push 'get', '/analyze/deckIdentifier/json' do
 	json    = request.body.read
 	deck    = Deck.from_hash json
@@ -84,13 +88,13 @@ end
 Plugin.api.push 'post', '/analyze/deckIdentifier/test/reset' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'reset the test environment.'
   messages = ''
-	logger.register_trigger 'test' + params['accesskey'] do |message, line|
+	base_logger.register_trigger 'test' + params['accesskey'] do |message, line|
     messages += line
   end
 	test_environment.clear
 	test_environment.register_config
 	test_environment.finish
-  logger.unregister_trigger 'test' + params['accesskey']
+	base_logger.unregister_trigger 'test' + params['accesskey']
 	"reset\n" + messages
 end
 
@@ -122,13 +126,13 @@ end
 Plugin.api.push 'post', '/analyze/deckIdentifier/restart' do
 	DeckIdentifier.quick_access_key params['accesskey'], self, 'restarted the production server config.'
   messages = ""
-	logger.register_trigger 'production' + params['accesskey'] do |msg, line|
+	base_logger.register_trigger 'production' + params['accesskey'] do |msg, line|
     messages += line
   end
 	DeckIdentifier.global.clear
 	DeckIdentifier.global.register_config
 	DeckIdentifier.global.finish
-  logger.unregister_trigger 'production' + params['accesskey']
+	base_logger.unregister_trigger 'production' + params['accesskey']
 	"restart\n" + messages
 end
 
