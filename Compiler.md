@@ -78,7 +78,7 @@
 
 此外，你可以用字段 `check tag` `force tag` `force` `refuse tag` `refuse` 来指定标签的特别功能。其作用请参见文末的字段一览表。
 
-##怎样定义一个标签（Tag）
+## 怎样定义一个标签（Tag）
 
 第一行如下：
 
